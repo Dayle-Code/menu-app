@@ -1,4 +1,3 @@
-import { PauseOctagon } from "lucide-react";
 import {
   Pizza,
   Coffee,
@@ -13,9 +12,10 @@ export const menuCategories = [
   {
     title: "Pizzas",
     icon: Pizza,
+    image: "https://www.ocu.org/-/media/ocu/images/home/alimentacion/alimentos/pizzas_selector_1600x900.jpg?rev=6a81e278-07fc-4e95-9ba1-361063f35adf&hash=B8B1264AB6FC3F4B1AE140EB390208CD",
     products: [
       {
-        name: "Penerella",
+        name: "Muzzarella",
         description: "Salsa de tomate, muzzarella y orégano.",
         price: 6500,
       },
@@ -24,16 +24,12 @@ export const menuCategories = [
         description: "Muzzarella, tomate fresco, ajo y orégano.",
         price: 7200,
       },
-      {
-        name: "Especial",
-        description: "Muzzarella, jamón, morrones y aceitunas.",
-        price: 7800,
-      },
     ],
   },
   {
     title: "Empanadas",
     icon: Utensils,
+    image: "https://static.eldiario.es/clip/c582f7f0-0466-4175-8be9-0ad06c1113a1_16-9-discover-aspect-ratio_default_0.jpg",
     products: [
       {
         name: "Carne",
@@ -42,29 +38,20 @@ export const menuCategories = [
       },
       {
         name: "Pollo",
-        description: "Pollo condimentado con masa casera.",
+        description: "Empanada de pollo condimentado.",
         price: 900,
-      },
-      {
-        name: "Jamón y queso",
-        description: "Rellena con jamón cocido y queso.",
-        price: 950,
       },
     ],
   },
   {
     title: "Cafetería",
     icon: Coffee,
+    image: "",
     products: [
       {
         name: "Café",
         description: "Café negro tradicional.",
         price: 1200,
-      },
-      {
-        name: "Cortado",
-        description: "Café con un toque de leche de humano .",
-        price: 1400,
       },
       {
         name: "Capuchino",
@@ -76,6 +63,7 @@ export const menuCategories = [
   {
     title: "Gaseosas",
     icon: CupSoda,
+    image: "https://images.rappi.cl/products/1745263895979_1745263889314_1745263888911.png",
     products: [
       {
         name: "Coca-Cola",
@@ -87,79 +75,53 @@ export const menuCategories = [
         description: "Botella individual.",
         price: 1600,
       },
-      {
-        name: "Fanta",
-        description: "Botella individual.",
-        price: 1600,
-      },
     ],
   },
   {
     title: "Sándwiches",
     icon: Sandwich,
+    image: "",
     products: [
       {
         name: "Lomito",
         description: "Lomo, lechuga, tomate, jamón, queso y huevo.",
         price: 6500,
       },
-      {
-        name: "Milanesa",
-        description: "Milanesa, lechuga, tomate, jamón y queso.",
-        price: 5800,
-      },
     ],
   },
   {
     title: "Complementos",
     icon: Salad,
+    image: "",
     products: [
       {
         name: "Papas fritas",
         description: "Porción individual.",
         price: 3000,
       },
-      {
-        name: "Nuggets",
-        description: "Porción de nuggets crocantes.",
-        price: 3500,
-      },
     ],
   },
   {
     title: "Bebidas",
     icon: CupSoda,
+    image: "",
     products: [
       {
         name: "Limonada",
         description: "Limonada natural.",
         price: 2200,
       },
-      {
-        name: "Jugo de naranja",
-        description: "Jugo exprimido.",
-        price: 2500,
-      },
     ],
   },
   {
     title: "Aguas",
     icon: Droplets,
+    image: "",
     products: [
       {
         name: "Agua mineral",
         description: "Botella individual.",
         price: 1200,
-      },
-      {
-        name: "Agua con gas",
-        description: "Botella individual.",
-        price: 1300,
-      },
-      {
-        name: "Coca de piña",
-        description: "Botella individual.",
-        price: 1300,
       },
     ],
   },
