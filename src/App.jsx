@@ -75,33 +75,11 @@ function HomeHeader() {
         borderBottomRightRadius: theme.radius.headerBottom,
       }}
     >
-      <LeafDecoration side="left" />
-      <LeafDecoration side="right" />
-
-      <Sparkles
-        className="absolute left-[88px] top-[88px]"
-        size={15}
-        style={{ color: theme.colors.accent }}
-      />
-
-      <Sparkles
-        className="absolute right-[88px] top-[88px]"
-        size={15}
-        style={{ color: theme.colors.accent }}
-      />
-
-      <Pizza
-        size={56}
-        className="mx-auto"
-        strokeWidth={1.55}
-        style={{ color: theme.colors.primary }}
-      />
-
       <h1
         className="mt-3 text-[44px] leading-none font-serif font-semibold"
         style={{ color: theme.colors.primary }}
       >
-        La Trattoria
+        NombreLocal
       </h1>
 
       <div className="mt-5 flex items-center justify-center gap-3">
@@ -114,7 +92,7 @@ function HomeHeader() {
           className="text-[14px] tracking-[0.32em] uppercase"
           style={{ color: theme.colors.accentDark }}
         >
-          Pizza & Café
+          Cafe y Comidas
         </span>
 
         <span
@@ -127,7 +105,7 @@ function HomeHeader() {
         className="mt-3 text-[11px] tracking-[0.34em] uppercase"
         style={{ color: theme.colors.primary }}
       >
-        Desde 2018
+        Lo mejor de salta
       </p>
     </header>
   );

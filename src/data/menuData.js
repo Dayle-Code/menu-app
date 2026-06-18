@@ -17,12 +17,12 @@ export const menuCategories = [
       {
         name: "Muzzarella",
         description: "Salsa de tomate, muzzarella y orégano.",
-        price: 6500,
+        price: 1000,
       },
       {
         name: "Napolitana",
         description: "Muzzarella, tomate fresco, ajo y orégano.",
-        price: 7200,
+        price: 1000,
       },
     ],
   },
@@ -34,29 +34,29 @@ export const menuCategories = [
       {
         name: "Carne",
         description: "Empanada clásica de carne suave.",
-        price: 900,
+        price: 1000,
       },
       {
         name: "Pollo",
         description: "Empanada de pollo condimentado.",
-        price: 900,
+        price: 1000,
       },
     ],
   },
   {
     title: "Cafetería",
     icon: Coffee,
-    image: "",
+    image: "https://images.pexels.com/photos/414720/pexels-photo-414720.jpeg?cs=srgb&dl=art-background-beverage-414720.jpg&fm=jpg",
     products: [
       {
         name: "Café",
         description: "Café negro tradicional.",
-        price: 1200,
+        price: 1000,
       },
       {
         name: "Capuchino",
         description: "Café con leche espumada.",
-        price: 1800,
+        price: 1000,
       },
     ],
   },
@@ -68,60 +68,36 @@ export const menuCategories = [
       {
         name: "Coca-Cola",
         description: "Botella individual.",
-        price: 1600,
+        price: 1000,
       },
       {
         name: "Sprite",
         description: "Botella individual.",
-        price: 1600,
+        price: 1000,
       },
     ],
   },
   {
     title: "Sándwiches",
     icon: Sandwich,
-    image: "",
+    image: "https://th.bing.com/th/id/R.95461ee52d94fe16d1aaaaa5d0824275?rik=0zpbgnefcA6GyQ&pid=ImgRaw&r=0",
     products: [
       {
         name: "Lomito",
         description: "Lomo, lechuga, tomate, jamón, queso y huevo.",
-        price: 6500,
+        price: 1000,
       },
     ],
   },
   {
     title: "Complementos",
     icon: Salad,
-    image: "",
+    image: "https://imag.bonviveur.com/ensalada-de-lechuga-y-tomate-foto-cerca.jpg",
     products: [
       {
         name: "Papas fritas",
         description: "Porción individual.",
-        price: 3000,
-      },
-    ],
-  },
-  {
-    title: "Bebidas",
-    icon: CupSoda,
-    image: "",
-    products: [
-      {
-        name: "Limonada",
-        description: "Limonada natural.",
-        price: 2200,
-      },
-    ],
-  },
-  {
-    title: "Aguas",
-    icon: Droplets,
-    image: "",
-    products: [
-      {
-        name: "Agua mineral",
-        description: "Botella individual.",
-        price: 1200,
+        price: 1000,
       },
     ],
   },
