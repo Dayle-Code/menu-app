@@ -163,7 +163,7 @@ function CategoryCard({ category, onClick }) {
 
 function HomePage({ onSelectCategory }) {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <HomeHeader />
 
       <section
@@ -179,8 +179,10 @@ function HomePage({ onSelectCategory }) {
         ))}
       </section>
 
-      <Footer />
-    </>
+      <div className="mt-auto">
+        <Footer />
+      </div>
+    </div>
   );
 }
 
@@ -306,7 +308,7 @@ function App() {
       style={{ backgroundColor: theme.colors.background }}
     >
       <section
-        className="w-full max-w-[430px] min-h-screen overflow-hidden"
+        className="w-full max-w-[430px] min-h-screen overflow-hidden flex flex-col"
         style={{ backgroundColor: theme.colors.page }}
       >
         {selectedCategory ? (
