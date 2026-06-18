@@ -97,7 +97,7 @@ export const menuCategories = [
       {
         name: "Papas fritas",
         description: "Porción individual.",
-        price: 1000,
+        price: 1100,
       },
     ],
   },
