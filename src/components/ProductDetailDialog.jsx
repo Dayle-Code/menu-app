@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ImageOff, X } from "lucide-react";
 import { theme } from "../config/theme";
-import { formatPrice } from "../utils/menu";
+import { formatPrice, formatProductPrice } from "../utils/menu";
+import ProductBadges from "./ProductBadges";
 import "./ProductDetailDialog.css";
 
 function ProductImage({ product, category }) {
@@ -94,7 +95,7 @@ function ProductDetailDialog({ product, category, open, onClose }) {
     product?.detailDescription ||
     product?.description ||
     "Este producto no tiene una descripción disponible.";
-  const tags = product?.tags ?? [];
+  const variants = product?.variants ?? [];
   const hasAdditionalInformation = Boolean(
     product?.ingredients || product?.portion,
   );
@@ -164,9 +165,7 @@ function ProductDetailDialog({ product, category, open, onClose }) {
               className="shrink-0 text-xl"
               style={{ color: theme.colors.price }}
             >
-              {typeof product?.price === "number"
-                ? formatPrice(product.price)
-                : "No disponible"}
+              {formatProductPrice(product)}
             </strong>
           </div>
 
@@ -178,25 +177,88 @@ function ProductDetailDialog({ product, category, open, onClose }) {
             {detailDescription}
           </p>
 
-          {tags.length > 0 && (
-            <ul
-              aria-label="Características del producto"
-              className="mt-5 flex flex-wrap gap-2"
+          <ProductBadges
+            product={product}
+            includeTags
+            className="mt-5"
+          />
+
+          {product?.available === false && (
+            <p
+              role="status"
+              className="mt-5 rounded-2xl border px-4 py-3 text-sm font-semibold"
+              style={{
+                backgroundColor: theme.colors.statusUnavailableBackground,
+                borderColor: theme.colors.statusUnavailableBorder,
+                color: theme.colors.statusUnavailableText,
+              }}
             >
-              {tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="rounded-full border px-3 py-1 text-xs font-semibold"
-                  style={{
-                    backgroundColor: theme.colors.iconOuterBackground,
-                    borderColor: theme.colors.border,
-                    color: theme.colors.accentDark,
-                  }}
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
+              Este producto está temporalmente no disponible.
+            </p>
+          )}
+
+          {variants.length > 0 && (
+            <section
+              aria-labelledby={`${titleId}-variants`}
+              className="mt-6"
+            >
+              <h3
+                id={`${titleId}-variants`}
+                className="text-xs font-semibold uppercase tracking-[0.18em]"
+                style={{ color: theme.colors.accentDark }}
+              >
+                Opciones
+              </h3>
+
+              <ul className="mt-3 grid gap-2">
+                {variants.map((variant) => {
+                  const variantUnavailable = variant.available === false;
+
+                  return (
+                    <li
+                      key={variant.id}
+                      className="flex items-center justify-between gap-4 rounded-2xl border px-4 py-3"
+                      style={{
+                        backgroundColor: variantUnavailable
+                          ? theme.colors.statusUnavailableBackground
+                          : theme.colors.iconOuterBackground,
+                        borderColor: variantUnavailable
+                          ? theme.colors.statusUnavailableBorder
+                          : theme.colors.border,
+                        opacity: variantUnavailable ? 0.72 : 1,
+                      }}
+                    >
+                      <div>
+                        <p className="font-semibold">{variant.name}</p>
+                        {variant.description && (
+                          <p
+                            className="mt-0.5 text-xs"
+                            style={{ color: theme.colors.productDescription }}
+                          >
+                            {variant.description}
+                          </p>
+                        )}
+                        {variantUnavailable && (
+                          <p
+                            className="mt-1 text-xs font-semibold"
+                            style={{ color: theme.colors.statusUnavailableText }}
+                          >
+                            No disponible
+                          </p>
+                        )}
+                      </div>
+
+                      <strong
+                        className="shrink-0"
+                        style={{ color: theme.colors.price }}
+                      >
+                        {formatPrice(variant.price)}
+                      </strong>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
           )}
 
           {hasAdditionalInformation && (

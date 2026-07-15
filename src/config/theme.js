@@ -79,6 +79,17 @@ export const theme = {
     // Precio
     price: "#9d651c",
 
+    // Estados comerciales
+    statusUnavailableBackground: "#fbe9e7",
+    statusUnavailableBorder: "#efc5bf",
+    statusUnavailableText: "#9f2d20",
+    statusNewBackground: "#e8f4ea",
+    statusNewBorder: "#c5dfca",
+    statusNewText: "#2f6b3e",
+    statusFeaturedBackground: "#fff4dc",
+    statusFeaturedBorder: "#ead19a",
+    statusFeaturedText: "#8a5a14",
+
     // ===========================
     // BOTONES
     // ===========================

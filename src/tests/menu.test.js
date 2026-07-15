@@ -3,8 +3,12 @@ import assert from "node:assert/strict";
 import {
   findCategoryById,
   formatPrice,
+  formatProductPrice,
   getCategoryHash,
   getCategoryIdFromHash,
+  getProductStartingPrice,
+  normalizeSearchText,
+  searchMenu,
 } from "../utils/menu.js";
 
 test("formatea precios para Argentina", () => {
@@ -14,6 +18,67 @@ test("formatea precios para Argentina", () => {
 
 test("informa cuando el precio no es válido", () => {
   assert.equal(formatPrice(Number.NaN), "Precio no disponible");
+});
+
+test("calcula el menor precio disponible entre variantes", () => {
+  const product = {
+    price: 900,
+    variants: [
+      { id: "chico", price: 1000, available: false },
+      { id: "mediano", price: 1200 },
+      { id: "grande", price: 1500 },
+    ],
+  };
+
+  assert.equal(getProductStartingPrice(product), 1200);
+  assert.equal(formatProductPrice(product), "Desde $1.200");
+});
+
+test("admite el prefijo desde sin variantes", () => {
+  assert.equal(
+    formatProductPrice({ price: 2500, priceFrom: true }),
+    "Desde $2.500",
+  );
+});
+
+test("no muestra desde cuando las variantes disponibles valen lo mismo", () => {
+  assert.equal(
+    formatProductPrice({
+      variants: [
+        { id: "chico", price: 1200 },
+        { id: "grande", price: 1200 },
+      ],
+    }),
+    "$1.200",
+  );
+});
+
+test("normaliza mayúsculas y tildes para buscar", () => {
+  assert.equal(normalizeSearchText("  CAFETERÍA  "), "cafeteria");
+});
+
+test("busca productos por etiqueta, ingrediente y variante", () => {
+  const categories = [
+    {
+      id: "cafeteria",
+      title: "Cafetería",
+      products: [
+        {
+          id: "capuchino",
+          name: "Capuchino",
+          description: "Café con leche.",
+          ingredients: "Café y leche espumada",
+          tags: ["Cremoso"],
+          variants: [{ id: "grande", name: "Grande", price: 2000 }],
+        },
+      ],
+    },
+  ];
+
+  assert.equal(searchMenu(categories, "cremoso").length, 1);
+  assert.equal(searchMenu(categories, "leche espumada").length, 1);
+  assert.equal(searchMenu(categories, "cafeteria grande").length, 1);
+  assert.equal(searchMenu(categories, "pizza").length, 0);
 });
 
 test("construye y lee el hash de una categoría", () => {

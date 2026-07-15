@@ -33,6 +33,29 @@ button {
   font: inherit;
 }
 
+.category-nav {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.category-nav__track {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.category-nav__track::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-search-field:focus-within {
+  outline: 3px solid #b9822c;
+  outline-offset: 3px;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
 .interactive-control:focus-visible {
   outline: 3px solid #b9822c;
   outline-offset: 3px;
