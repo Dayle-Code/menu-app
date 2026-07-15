@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Pizza</title>
+  <rect width="160" height="160" fill="#f0ddb6"/>
+  <path d="M34 36c35-18 65-16 92 3L81 132 34 36Z" fill="#f5c66b" stroke="#173d25" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M34 36c31-18 65-17 92 3" fill="none" stroke="#b9822c" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="73" cy="70" r="9" fill="#a9472c"/>
+  <circle cx="98" cy="88" r="9" fill="#a9472c"/>
+  <circle cx="67" cy="101" r="7" fill="#a9472c"/>
+</svg>
