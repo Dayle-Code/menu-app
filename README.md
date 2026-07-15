@@ -99,6 +99,11 @@ Ejemplo:
       id: "muzzarella",
       name: "Muzzarella",
       description: "Salsa de tomate, muzzarella y orégano.",
+      detailDescription: "Descripción ampliada para el modal.",
+      ingredients: "Masa, salsa de tomate, muzzarella y orégano.",
+      portion: "8 porciones",
+      tags: ["Clásica", "Con queso"],
+      image: productImage("pizzas/muzzarella.svg"),
       price: 6500,
     },
   ],
@@ -122,6 +127,11 @@ No agregar el símbolo `$`; la aplicación lo formatea automáticamente para Arg
   id: "calabresa",
   name: "Calabresa",
   description: "Muzzarella, longaniza, tomate y orégano.",
+  detailDescription: "Descripción ampliada para el modal.",
+  ingredients: "Masa, salsa, muzzarella y longaniza.",
+  portion: "8 porciones",
+  tags: ["Intensa", "Con longaniza"],
+  image: productImage("pizzas/calabresa.webp"),
   price: 8200,
 },
 ```
@@ -146,27 +156,35 @@ Cuando una categoría no contiene productos, la interfaz muestra un estado vací
 
 ## Imágenes
 
-Las ilustraciones de categorías son recursos locales ubicados en:
+Las ilustraciones locales se separan por uso:
 
 ```text
 public/images/categories/
+public/images/products/
 ```
 
-Usar el helper definido en `menuData.js`:
+Usar los helpers definidos en `menuData.js`:
 
 ```js
 image: categoryImage("pizzas.svg"),
+image: productImage("pizzas/muzzarella.svg"),
 ```
 
-Esto evita depender de servidores externos, enlaces vencidos y bloqueos de hotlinking.
+Esto evita depender de servidores externos, enlaces vencidos y bloqueos de hotlinking. Si una imagen de categoría o producto no puede cargarse, la interfaz muestra automáticamente el icono de su categoría.
 
-Si una imagen local no puede cargarse, la interfaz muestra automáticamente el icono de la categoría. Para usar únicamente el icono:
+Para fotografías reales, preferir archivos WebP o AVIF optimizados, con una proporción cercana a `16:9` y evitando archivos innecesariamente pesados.
 
-```js
-image: "",
-```
+## Detalle de productos
 
-Para fotografías, preferir archivos WebP o AVIF optimizados y evitar imágenes innecesariamente pesadas.
+Al tocar una tarjeta se abre un modal con información ampliada. Los campos adicionales son opcionales:
+
+- `image`: imagen principal del producto.
+- `detailDescription`: descripción más extensa que la mostrada en el listado.
+- `ingredients`: ingredientes principales confirmados.
+- `portion`: tamaño, presentación o cantidad.
+- `tags`: etiquetas breves para destacar características reales del producto.
+
+Cuando un campo no está definido, el modal simplemente omite esa sección. No usar etiquetas alimentarias, alérgenos o afirmaciones comerciales sin información confirmada por el negocio.
 
 ## Navegación
 
@@ -196,12 +214,17 @@ src/tests/menu.test.js
 menu-app/
 ├─ .github/workflows/quality.yml
 ├─ public/
-│  ├─ images/categories/
+│  ├─ images/
+│  │  ├─ categories/
+│  │  └─ products/
 │  └─ menu.svg
 ├─ src/
 │  ├─ config/
 │  │  ├─ site.js
 │  │  └─ theme.js
+│  ├─ components/
+│  │  ├─ ProductDetailDialog.css
+│  │  └─ ProductDetailDialog.jsx
 │  ├─ data/menuData.js
 │  ├─ tests/menu.test.js
 │  ├─ utils/menu.js

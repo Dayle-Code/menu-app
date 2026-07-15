@@ -1,10 +1,46 @@
-import { useEffect, useId, useRef } from "react";
-import { X } from "lucide-react";
+import { useEffect, useId, useRef, useState } from "react";
+import { ImageOff, X } from "lucide-react";
 import { theme } from "../config/theme";
 import { formatPrice } from "../utils/menu";
 import "./ProductDetailDialog.css";
 
-function ProductDetailDialog({ product, categoryTitle, open, onClose }) {
+function ProductImage({ product, category }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const Icon = category?.icon;
+  const shouldShowImage = Boolean(product?.image) && !imageFailed;
+
+  if (shouldShowImage) {
+    return (
+      <img
+        src={product.image}
+        alt={product.name}
+        decoding="async"
+        className="product-detail-dialog__image"
+        onError={() => setImageFailed(true)}
+      />
+    );
+  }
+
+  return (
+    <div
+      role="img"
+      aria-label={`Imagen no disponible para ${product?.name ?? "el producto"}`}
+      className="product-detail-dialog__image-fallback"
+      style={{
+        backgroundColor: theme.colors.iconBackground,
+        color: theme.colors.primary,
+      }}
+    >
+      {Icon ? (
+        <Icon aria-hidden="true" size={72} strokeWidth={1.4} />
+      ) : (
+        <ImageOff aria-hidden="true" size={72} strokeWidth={1.4} />
+      )}
+    </div>
+  );
+}
+
+function ProductDetailDialog({ product, category, open, onClose }) {
   const dialogRef = useRef(null);
   const titleId = useId();
   const descriptionId = useId();
@@ -54,6 +90,15 @@ function ProductDetailDialog({ product, categoryTitle, open, onClose }) {
     closeDialog();
   };
 
+  const detailDescription =
+    product?.detailDescription ||
+    product?.description ||
+    "Este producto no tiene una descripción disponible.";
+  const tags = product?.tags ?? [];
+  const hasAdditionalInformation = Boolean(
+    product?.ingredients || product?.portion,
+  );
+
   return (
     <dialog
       ref={dialogRef}
@@ -64,7 +109,7 @@ function ProductDetailDialog({ product, categoryTitle, open, onClose }) {
       onCancel={handleCancel}
       onClose={onClose}
     >
-      <div
+      <article
         className="product-detail-dialog__panel"
         style={{
           backgroundColor: theme.colors.productCard,
@@ -75,7 +120,6 @@ function ProductDetailDialog({ product, categoryTitle, open, onClose }) {
         <div
           aria-hidden="true"
           className="product-detail-dialog__handle"
-          style={{ backgroundColor: theme.colors.border }}
         />
 
         <button
@@ -86,62 +130,129 @@ function ProductDetailDialog({ product, categoryTitle, open, onClose }) {
           title="Cerrar"
           className="interactive-control product-detail-dialog__close"
           style={{
-            backgroundColor: theme.colors.iconOuterBackground,
+            backgroundColor: theme.colors.productCard,
             color: theme.colors.primary,
           }}
         >
           <X aria-hidden="true" size={22} />
         </button>
 
-        <p
-          className="text-xs font-semibold uppercase tracking-[0.24em]"
-          style={{ color: theme.colors.accentDark }}
-        >
-          {categoryTitle ? `Menú · ${categoryTitle}` : "Detalle del producto"}
-        </p>
+        <figure className="product-detail-dialog__visual">
+          <ProductImage
+            key={product?.id ?? "empty-product"}
+            product={product}
+            category={category}
+          />
+        </figure>
 
-        <h2 id={titleId} className="mt-3 font-serif text-3xl font-semibold">
-          {product?.name ?? "Producto"}
-        </h2>
+        <div className="product-detail-dialog__content">
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.24em]"
+            style={{ color: theme.colors.accentDark }}
+          >
+            {category?.title
+              ? `Menú · ${category.title}`
+              : "Detalle del producto"}
+          </p>
 
-        <p
-          id={descriptionId}
-          className="mt-3 text-base leading-relaxed"
-          style={{ color: theme.colors.productDescription }}
-        >
-          {product?.description || "Este producto no tiene una descripción disponible."}
-        </p>
+          <div className="mt-3 flex items-start justify-between gap-4">
+            <h2 id={titleId} className="font-serif text-3xl font-semibold">
+              {product?.name ?? "Producto"}
+            </h2>
 
-        <div
-          className="mt-6 flex items-center justify-between gap-4 border-t pt-5"
-          style={{ borderColor: theme.colors.border }}
-        >
-          <span
-            className="text-xs font-semibold uppercase tracking-[0.2em]"
+            <strong
+              className="shrink-0 text-xl"
+              style={{ color: theme.colors.price }}
+            >
+              {typeof product?.price === "number"
+                ? formatPrice(product.price)
+                : "No disponible"}
+            </strong>
+          </div>
+
+          <p
+            id={descriptionId}
+            className="mt-3 text-base leading-relaxed"
             style={{ color: theme.colors.productDescription }}
           >
-            Precio
-          </span>
+            {detailDescription}
+          </p>
 
-          <strong className="text-2xl" style={{ color: theme.colors.price }}>
-            {typeof product?.price === "number"
-              ? formatPrice(product.price)
-              : "No disponible"}
-          </strong>
+          {tags.length > 0 && (
+            <ul
+              aria-label="Características del producto"
+              className="mt-5 flex flex-wrap gap-2"
+            >
+              {tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="rounded-full border px-3 py-1 text-xs font-semibold"
+                  style={{
+                    backgroundColor: theme.colors.iconOuterBackground,
+                    borderColor: theme.colors.border,
+                    color: theme.colors.accentDark,
+                  }}
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {hasAdditionalInformation && (
+            <dl
+              className="mt-6 grid gap-4 border-y py-5"
+              style={{ borderColor: theme.colors.border }}
+            >
+              {product?.ingredients && (
+                <div>
+                  <dt
+                    className="text-xs font-semibold uppercase tracking-[0.18em]"
+                    style={{ color: theme.colors.accentDark }}
+                  >
+                    Ingredientes
+                  </dt>
+                  <dd
+                    className="mt-1 text-sm leading-relaxed"
+                    style={{ color: theme.colors.productDescription }}
+                  >
+                    {product.ingredients}
+                  </dd>
+                </div>
+              )}
+
+              {product?.portion && (
+                <div>
+                  <dt
+                    className="text-xs font-semibold uppercase tracking-[0.18em]"
+                    style={{ color: theme.colors.accentDark }}
+                  >
+                    Porción
+                  </dt>
+                  <dd
+                    className="mt-1 text-sm"
+                    style={{ color: theme.colors.productDescription }}
+                  >
+                    {product.portion}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          )}
+
+          <button
+            type="button"
+            onClick={closeDialog}
+            className="interactive-control mt-6 min-h-12 w-full rounded-2xl px-5 py-3 font-bold"
+            style={{
+              backgroundColor: theme.colors.darkGreen,
+              color: theme.colors.lightText,
+            }}
+          >
+            Cerrar
+          </button>
         </div>
-
-        <button
-          type="button"
-          onClick={closeDialog}
-          className="interactive-control mt-6 min-h-12 w-full rounded-2xl px-5 py-3 font-bold"
-          style={{
-            backgroundColor: theme.colors.darkGreen,
-            color: theme.colors.lightText,
-          }}
-        >
-          Cerrar
-        </button>
-      </div>
+      </article>
     </dialog>
   );
 }

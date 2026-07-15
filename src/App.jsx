@@ -409,7 +409,7 @@ function App() {
 
       <ProductDetailDialog
         product={selectedProduct}
-        categoryTitle={selectedCategory?.title}
+        category={selectedCategory}
         open={Boolean(selectedProduct)}
         onClose={() => setSelectedProduct(null)}
       />
