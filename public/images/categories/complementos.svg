@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Complementos</title>
+  <rect width="160" height="160" fill="#f0ddb6"/>
+  <path d="M31 74h98c-4 36-24 56-49 56S35 110 31 74Z" fill="#faf3e5" stroke="#173d25" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M48 73c0-20 25-31 37-10 7-21 38-16 40 10" fill="#6b9d55" stroke="#173d25" stroke-width="6" stroke-linecap="round"/>
+  <path d="M80 63c-2-19 13-30 25-35-2 18-10 31-25 35Z" fill="#8ab66e" stroke="#173d25" stroke-width="5" stroke-linejoin="round"/>
+</svg>

@@ -1,40 +1,53 @@
-import { useState } from "react";
-import { Pizza, Sparkles, ArrowLeft, ImageOff } from "lucide-react";
-import { menuCategories } from "./data/menuData";
+import { useEffect, useState } from "react";
+import { ArrowLeft, ImageOff, Sparkles } from "lucide-react";
+import { siteConfig } from "./config/site";
 import { theme } from "./config/theme";
+import { menuCategories } from "./data/menuData";
+import {
+  findCategoryById,
+  formatPrice,
+  getCategoryHash,
+  getCategoryIdFromHash,
+} from "./utils/menu";
 
-function formatPrice(price) {
-  return `$${price.toLocaleString("es-AR")}`;
+function getSelectedCategoryId() {
+  const categoryId = getCategoryIdFromHash(window.location.hash);
+  return findCategoryById(menuCategories, categoryId)?.id ?? null;
 }
 
 function CategoryVisual({ category, size = "small" }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const Icon = category.icon;
   const isLarge = size === "large";
+  const shouldShowImage = Boolean(category.image) && !imageFailed;
 
   return (
     <div
       className={`${
-        isLarge ? "w-20 h-20" : "w-[52px] h-[52px]"
-      } rounded-full flex items-center justify-center overflow-hidden`}
+        isLarge ? "h-20 w-20" : "h-[52px] w-[52px]"
+      } flex items-center justify-center overflow-hidden rounded-full`}
       style={{ backgroundColor: theme.colors.iconBackground }}
     >
-      {category.image ? (
+      {shouldShowImage ? (
         <img
           src={category.image}
-          alt={category.title}
-          className="w-full h-full object-cover"
-          onError={(event) => {
-            event.currentTarget.style.display = "none";
-          }}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+          onError={() => setImageFailed(true)}
         />
       ) : Icon ? (
         <Icon
+          aria-hidden="true"
           size={isLarge ? 42 : 34}
           strokeWidth={1.7}
           style={{ color: theme.colors.primary }}
         />
       ) : (
         <ImageOff
+          aria-hidden="true"
           size={isLarge ? 42 : 34}
           strokeWidth={1.7}
           style={{ color: theme.colors.primary }}
@@ -44,30 +57,10 @@ function CategoryVisual({ category, size = "small" }) {
   );
 }
 
-function LeafDecoration({ side = "left" }) {
-  return (
-    <svg
-      className={`absolute top-8 ${
-        side === "left" ? "left-2" : "right-2 scale-x-[-1]"
-      } opacity-70`}
-      width="75"
-      height="135"
-      viewBox="0 0 75 135"
-      fill="none"
-    >
-      <path d="M20 125C35 76 34 36 24 8" stroke={theme.colors.primary} strokeWidth="1.2" />
-      <path d="M23 62C5 52 8 35 27 42" stroke={theme.colors.primary} strokeWidth="1.2" />
-      <path d="M34 40C48 24 48 10 38 5" stroke={theme.colors.primary} strokeWidth="1.2" />
-      <path d="M27 84C9 84 5 68 25 70" stroke={theme.colors.primary} strokeWidth="1.2" />
-      <path d="M31 102C48 94 52 78 34 82" stroke={theme.colors.primary} strokeWidth="1.2" />
-    </svg>
-  );
-}
-
 function HomeHeader() {
   return (
     <header
-      className="relative px-5 pt-8 pb-7 text-center border-b overflow-hidden"
+      className="relative overflow-hidden border-b px-5 pb-7 pt-8 text-center"
       style={{
         backgroundColor: theme.colors.page,
         borderColor: theme.colors.goldBorder,
@@ -76,36 +69,38 @@ function HomeHeader() {
       }}
     >
       <h1
-        className="mt-3 text-[44px] leading-none font-serif font-semibold"
+        className="mt-3 font-serif text-[44px] font-semibold leading-none"
         style={{ color: theme.colors.primary }}
       >
-        NombreLocal
+        {siteConfig.businessName}
       </h1>
 
       <div className="mt-5 flex items-center justify-center gap-3">
         <span
-          className="w-11 h-px"
+          aria-hidden="true"
+          className="h-px w-11"
           style={{ backgroundColor: theme.colors.accentDark }}
         />
 
         <span
-          className="text-[14px] tracking-[0.32em] uppercase"
+          className="text-[14px] uppercase tracking-[0.32em]"
           style={{ color: theme.colors.accentDark }}
         >
-          Cafe y Comidas
+          {siteConfig.businessType}
         </span>
 
         <span
-          className="w-11 h-px"
+          aria-hidden="true"
+          className="h-px w-11"
           style={{ backgroundColor: theme.colors.accentDark }}
         />
       </div>
 
       <p
-        className="mt-3 text-[11px] tracking-[0.34em] uppercase"
+        className="mt-3 text-[11px] uppercase tracking-[0.34em]"
         style={{ color: theme.colors.primary }}
       >
-        Lo mejor de salta
+        {siteConfig.tagline}
       </p>
     </header>
   );
@@ -116,7 +111,8 @@ function CategoryCard({ category, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="relative min-h-[128px] p-3 flex flex-col items-center justify-center gap-2 transition active:scale-95 hover:shadow-lg border"
+      aria-label={`Ver categoría ${category.title}`}
+      className="interactive-control relative flex min-h-[128px] flex-col items-center justify-center gap-2 border p-3 transition hover:shadow-lg active:scale-95"
       style={{
         backgroundColor: theme.colors.card,
         borderColor: theme.colors.border,
@@ -125,19 +121,21 @@ function CategoryCard({ category, onClick }) {
       }}
     >
       <Sparkles
+        aria-hidden="true"
         size={12}
         className="absolute left-4 top-1/2"
         style={{ color: theme.colors.accent }}
       />
 
       <Sparkles
+        aria-hidden="true"
         size={12}
         className="absolute right-4 top-1/2"
         style={{ color: theme.colors.accent }}
       />
 
       <div
-        className="w-[72px] h-[72px] rounded-full border flex items-center justify-center"
+        className="flex h-[72px] w-[72px] items-center justify-center rounded-full border"
         style={{
           backgroundColor: theme.colors.iconOuterBackground,
           borderColor: theme.colors.primary,
@@ -147,14 +145,15 @@ function CategoryCard({ category, onClick }) {
       </div>
 
       <h2
-        className="text-[15px] font-bold uppercase tracking-wide leading-tight text-center max-w-[125px]"
+        className="max-w-[125px] text-center text-[15px] font-bold uppercase leading-tight tracking-wide"
         style={{ color: theme.colors.primary }}
       >
         {category.title}
       </h2>
 
       <div
-        className="w-8 h-[2px]"
+        aria-hidden="true"
+        className="h-[2px] w-8"
         style={{ backgroundColor: theme.colors.accent }}
       />
     </button>
@@ -163,16 +162,21 @@ function CategoryCard({ category, onClick }) {
 
 function HomePage({ onSelectCategory }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <HomeHeader />
 
       <section
-        className="px-4 py-5 grid grid-cols-2 gap-4"
+        aria-labelledby="categories-title"
+        className="grid grid-cols-2 gap-4 px-4 py-5"
         style={{ backgroundColor: theme.colors.page }}
       >
+        <h2 id="categories-title" className="sr-only">
+          Categorías del menú
+        </h2>
+
         {menuCategories.map((category) => (
           <CategoryCard
-            key={category.title}
+            key={category.id}
             category={category}
             onClick={() => onSelectCategory(category)}
           />
@@ -186,11 +190,28 @@ function HomePage({ onSelectCategory }) {
   );
 }
 
+function EmptyCategoryState() {
+  return (
+    <div
+      role="status"
+      className="border px-5 py-8 text-center"
+      style={{
+        backgroundColor: theme.colors.productCard,
+        borderColor: theme.colors.border,
+        borderRadius: theme.radius.product,
+        color: theme.colors.productDescription,
+      }}
+    >
+      <p className="font-medium">{siteConfig.emptyCategoryMessage}</p>
+    </div>
+  );
+}
+
 function CategoryPage({ category, onBack }) {
-  if (!category) return null;
+  const products = category.products ?? [];
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <header
         className="px-5 py-5"
         style={{
@@ -202,82 +223,91 @@ function CategoryPage({ category, onBack }) {
           <button
             type="button"
             onClick={onBack}
-            className="w-10 h-10 rounded-full flex items-center justify-center active:scale-95"
+            aria-label="Volver a las categorías"
+            title="Volver a las categorías"
+            className="interactive-control flex h-10 w-10 shrink-0 items-center justify-center rounded-full active:scale-95"
             style={{ backgroundColor: theme.colors.backButton }}
           >
-            <ArrowLeft size={22} />
+            <ArrowLeft aria-hidden="true" size={22} />
           </button>
 
-          <CategoryVisual category={category} size="large" />
+          <CategoryVisual key={category.id} category={category} size="large" />
 
           <div>
             <p
               className="text-xs uppercase tracking-[0.25em]"
               style={{ color: theme.colors.gold }}
             >
-              Menú
+              {siteConfig.menuLabel}
             </p>
 
-            <h1 className="text-2xl font-serif">
-              {category.title}
-            </h1>
+            <h1 className="font-serif text-2xl">{category.title}</h1>
 
             <p
               className="text-sm"
               style={{ color: theme.colors.lightTextSoft }}
             >
-              Productos disponibles
+              {siteConfig.availableProductsLabel}
             </p>
           </div>
         </div>
       </header>
 
-      <section className="p-4">
-        <div className="space-y-3">
-          {category.products?.map((product) => (
-            <article
-              key={product.name}
-              className="w-full border shadow-sm p-4 flex items-start justify-between gap-4"
-              style={{
-                backgroundColor: theme.colors.productCard,
-                borderColor: theme.colors.border,
-                borderRadius: theme.radius.product,
-              }}
-            >
-              <div>
-                <h3
-                  className="font-bold"
-                  style={{ color: theme.colors.primary }}
-                >
-                  {product.name}
-                </h3>
+      <section aria-labelledby="products-title" className="p-4">
+        <h2 id="products-title" className="sr-only">
+          Productos de {category.title}
+        </h2>
 
-                <p
-                  className="text-sm mt-1"
-                  style={{ color: theme.colors.productDescription }}
+        {products.length > 0 ? (
+          <ul className="space-y-3">
+            {products.map((product) => (
+              <li key={product.id}>
+                <article
+                  className="flex w-full items-start justify-between gap-4 border p-4 shadow-sm"
+                  style={{
+                    backgroundColor: theme.colors.productCard,
+                    borderColor: theme.colors.border,
+                    borderRadius: theme.radius.product,
+                  }}
                 >
-                  {product.description}
-                </p>
-              </div>
+                  <div>
+                    <h3
+                      className="font-bold"
+                      style={{ color: theme.colors.primary }}
+                    >
+                      {product.name}
+                    </h3>
 
-              <span
-                className="font-bold whitespace-nowrap"
-                style={{ color: theme.colors.price }}
-              >
-                {formatPrice(product.price)}
-              </span>
-            </article>
-          ))}
-        </div>
+                    <p
+                      className="mt-1 text-sm"
+                      style={{ color: theme.colors.productDescription }}
+                    >
+                      {product.description}
+                    </p>
+                  </div>
+
+                  <span
+                    className="whitespace-nowrap font-bold"
+                    style={{ color: theme.colors.price }}
+                  >
+                    {formatPrice(product.price)}
+                  </span>
+                </article>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyCategoryState />
+        )}
       </section>
-    </>
+    </div>
   );
 }
 
 function Footer() {
   return (
     <footer
-      className="relative text-center py-7 overflow-hidden"
+      className="relative overflow-hidden py-7 text-center"
       style={{
         backgroundColor: theme.colors.darkGreen,
         color: theme.colors.lightText,
@@ -285,11 +315,12 @@ function Footer() {
         borderTopRightRadius: theme.radius.footerTop,
       }}
     >
-      <p className="text-[10px] tracking-[0.34em] uppercase">
-        Buen sabor, buenos momentos
+      <p className="text-[10px] uppercase tracking-[0.34em]">
+        {siteConfig.footerMessage}
       </p>
 
       <div
+        aria-hidden="true"
         className="mt-2 text-lg"
         style={{ color: theme.colors.gold }}
       >
@@ -300,24 +331,66 @@ function Footer() {
 }
 
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    getSelectedCategoryId,
+  );
+  const selectedCategory = findCategoryById(
+    menuCategories,
+    selectedCategoryId,
+  );
+
+  useEffect(() => {
+    const handleHistoryChange = () => {
+      setSelectedCategoryId(getSelectedCategoryId());
+    };
+
+    window.addEventListener("popstate", handleHistoryChange);
+    window.addEventListener("hashchange", handleHistoryChange);
+
+    return () => {
+      window.removeEventListener("popstate", handleHistoryChange);
+      window.removeEventListener("hashchange", handleHistoryChange);
+    };
+  }, []);
+
+  const handleSelectCategory = (category) => {
+    const nextUrl = `${window.location.pathname}${window.location.search}${getCategoryHash(category.id)}`;
+
+    window.history.pushState(
+      { menuCategory: category.id },
+      "",
+      nextUrl,
+    );
+    setSelectedCategoryId(category.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleBack = () => {
+    if (window.history.state?.menuCategory) {
+      window.history.back();
+      return;
+    }
+
+    const homeUrl = `${window.location.pathname}${window.location.search}`;
+    window.history.replaceState(null, "", homeUrl);
+    setSelectedCategoryId(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <main
-      className="min-h-screen flex justify-center"
+      className="flex min-h-screen justify-center"
       style={{ backgroundColor: theme.colors.background }}
     >
       <section
-        className="w-full max-w-[430px] min-h-screen overflow-hidden flex flex-col"
+        className="flex min-h-screen w-full max-w-[430px] flex-col overflow-hidden"
         style={{ backgroundColor: theme.colors.page }}
+        aria-label={`Menú digital de ${siteConfig.businessName}`}
       >
         {selectedCategory ? (
-          <CategoryPage
-            category={selectedCategory}
-            onBack={() => setSelectedCategory(null)}
-          />
+          <CategoryPage category={selectedCategory} onBack={handleBack} />
         ) : (
-          <HomePage onSelectCategory={setSelectedCategory} />
+          <HomePage onSelectCategory={handleSelectCategory} />
         )}
       </section>
     </main>

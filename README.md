@@ -1,122 +1,102 @@
 # Menu App
 
-Proyecto de menú digital hecho con **React + Vite + Tailwind CSS + pnpm**.
+Menú digital mobile-first hecho con **React, Vite, Tailwind CSS y pnpm**.
 
-La página sirve para mostrar una carta de comidas por categorías.  
-No tiene carrito ni sistema de compra. Es solo un menú visual.
+La aplicación muestra una carta de comidas organizada por categorías. No incluye carrito, pedidos ni pagos: su objetivo actual es ofrecer una consulta visual rápida desde el celular.
 
----
+## Requisitos
 
-## 1. Qué necesitan instalar
+- Node.js 22 o una versión LTS compatible.
+- pnpm 10.
+- Git.
 
-Antes de abrir el proyecto, cada persona necesita tener instalado:
-
-### Node.js
-
-Descargar e instalar desde:
-
-https://nodejs.org/
-
-Recomendado: versión **LTS**.
-
-Para comprobar si está instalado:
+Comprobar las instalaciones:
 
 ```bash
 node -v
-```
-
-### pnpm
-
-Después de instalar Node.js, instalar pnpm:
-
-```bash
-npm install -g pnpm
-```
-
-Para comprobar si está instalado:
-
-```bash
 pnpm -v
+git --version
 ```
 
-### Visual Studio Code
-
-Recomendado para editar el proyecto:
-
-https://code.visualstudio.com/
-
----
-
-## 2. Cómo abrir el proyecto
-
-Primero descargar o copiar la carpeta completa del proyecto.
-
-Ejemplo de carpeta:
-
-```text
-menu-app
-├─ src
-├─ package.json
-├─ vite.config.js
-├─ pnpm-lock.yaml
-└─ README.md
-```
-
-Abrir la carpeta `menu-app` con Visual Studio Code.
-
----
-
-## 3. Instalar dependencias
-
-Dentro de la carpeta del proyecto, abrir la terminal y ejecutar:
+## Instalación y ejecución
 
 ```bash
 pnpm install
-```
-
----
-
-## 4. Iniciar la página
-
-Para abrir la página en el navegador:
-
-```bash
 pnpm dev
 ```
 
-Luego abrir el link que aparezca en la terminal, por ejemplo:
+Vite mostrará la dirección local disponible, normalmente:
 
 ```text
-http://localhost:5173/
+http://localhost:5173/menu-app/
 ```
 
-Si el puerto está ocupado puede aparecer otro, como:
+Para probar desde otro dispositivo conectado a la misma red:
+
+```bash
+pnpm dev --host
+```
+
+## Verificaciones de calidad
+
+Ejecutar todas las comprobaciones antes de subir cambios:
+
+```bash
+pnpm check
+```
+
+Ese comando ejecuta, en orden:
+
+```bash
+pnpm lint
+pnpm test
+pnpm build
+```
+
+Las mismas verificaciones se ejecutan automáticamente mediante GitHub Actions en ramas `fix/**`, `feat/**`, `master` y pull requests hacia `master`.
+
+## Personalización del comercio
+
+Los textos generales del negocio están en:
 
 ```text
-http://localhost:5174/
+src/config/site.js
 ```
 
----
+Ahí se modifican el nombre, tipo de comercio, lema y textos comunes:
 
-## 5. Dónde modificar productos, precios e imágenes
+```js
+export const siteConfig = {
+  businessName: "NombreLocal",
+  businessType: "Café y comidas",
+  tagline: "Lo mejor de Salta",
+  footerMessage: "Buen sabor, buenos momentos",
+};
+```
 
-La mayoría de los cambios se hacen en:
+También deben actualizarse el título y la descripción pública de `index.html` cuando se defina el nombre real del comercio.
+
+## Categorías y productos
+
+La carta se administra desde:
 
 ```text
 src/data/menuData.js
 ```
 
-Ahí están las categorías y productos.
+Cada categoría y producto debe tener un `id` único y estable. El `id` no debe cambiar cuando solo se modifica el nombre visible, porque también se utiliza en la navegación y en las claves de React.
 
 Ejemplo:
 
 ```js
 {
+  id: "pizzas",
   title: "Pizzas",
-  image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300",
   icon: Pizza,
+  image: categoryImage("pizzas.svg"),
   products: [
     {
+      id: "muzzarella",
       name: "Muzzarella",
       description: "Salsa de tomate, muzzarella y orégano.",
       price: 6500,
@@ -125,286 +105,157 @@ Ejemplo:
 }
 ```
 
----
+### Cambiar un precio
 
-## 6. Cómo cambiar precios
-
-Buscar el producto y cambiar el valor de `price`.
-
-```js
-price: 6500,
-```
-
-Cambiarlo por:
+Modificar únicamente el valor numérico:
 
 ```js
 price: 7000,
 ```
 
-No hace falta poner `$`, porque la app lo agrega automáticamente.
+No agregar el símbolo `$`; la aplicación lo formatea automáticamente para Argentina.
 
----
-
-## 7. Cómo cambiar descripciones
-
-Buscar el producto y cambiar `description`.
-
-```js
-description: "Salsa de tomate, muzzarella y orégano.",
-```
-
----
-
-## 8. Cómo agregar un producto
-
-Dentro de la categoría, agregar un nuevo objeto dentro de `products`.
+### Agregar un producto
 
 ```js
 {
+  id: "calabresa",
   name: "Calabresa",
   description: "Muzzarella, longaniza, tomate y orégano.",
   price: 8200,
 },
 ```
 
----
+### Agregar una categoría
 
-## 9. Cómo agregar una categoría nueva
-
-Primero importar un icono arriba del archivo `menuData.js`.
-
-```js
-import { IceCream } from "lucide-react";
-```
-
-Después agregar una categoría nueva:
+1. Importar un icono válido de `lucide-react`.
+2. Crear una ilustración local en `public/images/categories/` o dejar `image` vacío.
+3. Agregar un objeto con `id`, `title`, `icon`, `image` y `products`.
 
 ```js
 {
+  id: "postres",
   title: "Postres",
   icon: IceCream,
-  image: "",
-  products: [
-    {
-      name: "Flan casero",
-      description: "Con dulce de leche o crema.",
-      price: 2500,
-    },
-  ],
+  image: categoryImage("postres.svg"),
+  products: [],
 }
 ```
 
----
+Cuando una categoría no contiene productos, la interfaz muestra un estado vacío en lugar de dejar la pantalla en blanco.
 
-## 10. Cómo usar imágenes en vez de iconos
+## Imágenes
 
-Cada categoría puede usar imagen o icono.
-
-### Usar imagen desde internet
-
-```js
-{
-  title: "Pizzas",
-  image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300",
-  icon: Pizza,
-  products: []
-}
-```
-
-### Usar solo icono
-
-```js
-{
-  title: "Pizzas",
-  image: "",
-  icon: Pizza,
-  products: []
-}
-```
-
-Si `image` está vacío, se muestra el icono.
-
----
-
-## 11. Importante sobre imágenes externas
-
-No todas las URLs funcionan.
-
-La URL tiene que ser un link directo a una imagen.
-
-Funciona:
+Las ilustraciones de categorías son recursos locales ubicados en:
 
 ```text
-https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300
+public/images/categories/
 ```
 
-No suele funcionar:
-
-```text
-https://pagina.com/articulo-de-pizza
-```
-
-Tampoco sirve usar una página normal. Tiene que ser una imagen real.
-
----
-
-## 12. Cómo usar imágenes locales
-
-Guardar imágenes en:
-
-```text
-src/assets/
-```
-
-Ejemplo:
-
-```text
-src/assets/pizza.jpg
-```
-
-Importar la imagen en `menuData.js`:
+Usar el helper definido en `menuData.js`:
 
 ```js
-import pizzaImg from "../assets/pizza.jpg";
+image: categoryImage("pizzas.svg"),
 ```
 
-Y usarla así:
+Esto evita depender de servidores externos, enlaces vencidos y bloqueos de hotlinking.
+
+Si una imagen local no puede cargarse, la interfaz muestra automáticamente el icono de la categoría. Para usar únicamente el icono:
 
 ```js
-{
-  title: "Pizzas",
-  image: pizzaImg,
-  icon: Pizza,
-  products: []
-}
+image: "",
 ```
 
----
+Para fotografías, preferir archivos WebP o AVIF optimizados y evitar imágenes innecesariamente pesadas.
 
-## 13. Archivos principales
+## Navegación
+
+Cada categoría tiene una URL compartible mediante hash:
 
 ```text
-src/App.jsx
+/menu-app/#categoria/pizzas
 ```
 
-Contiene la estructura visual de la página.
+El botón Atrás del navegador o del celular vuelve al listado de categorías. Una URL directa a una categoría también puede abrirse o compartirse sin instalar un router adicional.
+
+Las funciones de navegación y formato están en:
 
 ```text
-src/data/menuData.js
+src/utils/menu.js
 ```
 
-Contiene categorías, productos, precios, descripciones e imágenes.
+Sus pruebas están en:
 
 ```text
-src/index.css
+src/tests/menu.test.js
 ```
 
-Contiene estilos generales y Tailwind.
-
----
-
-## 14. Errores comunes
-
-### La página queda en blanco
-
-Abrir la consola del navegador:
+## Estructura principal
 
 ```text
-F12 → Console
+menu-app/
+├─ .github/workflows/quality.yml
+├─ public/
+│  ├─ images/categories/
+│  └─ menu.svg
+├─ src/
+│  ├─ config/
+│  │  ├─ site.js
+│  │  └─ theme.js
+│  ├─ data/menuData.js
+│  ├─ tests/menu.test.js
+│  ├─ utils/menu.js
+│  ├─ App.jsx
+│  ├─ index.css
+│  └─ main.jsx
+├─ index.html
+├─ package.json
+└─ vite.config.js
 ```
 
-Revisar el error rojo.
+## Despliegue
 
-### Cambié un icono y se rompió
-
-El icono debe existir en `lucide-react` y estar importado.
-
-Correcto:
-
-```js
-import { Pizza } from "lucide-react";
-```
-
-Y luego:
-
-```js
-icon: Pizza,
-```
-
-### La imagen no aparece
-
-Puede ser porque:
-
-- la URL está mal;
-- la URL no es directa a una imagen;
-- el sitio bloquea imágenes externas;
-- falta poner comillas.
-
-Correcto:
-
-```js
-image: "https://ejemplo.com/imagen.jpg",
-```
-
-Incorrecto:
-
-```js
-image: https://ejemplo.com/imagen.jpg,
-```
-
----
-
-## 15. Comandos útiles
-
-Instalar dependencias:
+Crear la compilación local:
 
 ```bash
-pnpm install
+pnpm build
+pnpm preview
 ```
 
-Iniciar proyecto:
+Publicar manualmente en GitHub Pages:
 
 ```bash
-pnpm dev
+pnpm deploy
 ```
 
-Detener servidor:
+La propiedad `base` de `vite.config.js` debe mantenerse como `/menu-app/` mientras el proyecto se publique en esa ruta.
+
+## Trabajo con ramas y commits
+
+Crear una rama por objetivo:
 
 ```bash
-Ctrl + C
+git switch master
+git pull origin master
+git switch -c feat/nombre-de-la-feature
 ```
 
-Instalar un paquete:
-
-```bash
-pnpm add nombre-del-paquete
-```
-
----
-
-## 16. Recomendación para trabajar entre varios
-
-Si varias personas van a modificar el proyecto:
-
-1. No borrar `package.json`.
-2. No borrar `src/data/menuData.js`.
-3. No modificar todo `App.jsx` si solo quieren cambiar productos.
-4. Cambiar productos, precios e imágenes principalmente desde `menuData.js`.
-5. Avisar qué archivo modificó cada uno para no pisarse cambios.
-
----
-
-## 17. Resumen rápido
-
-Para abrir el proyecto:
-
-```bash
-pnpm install
-pnpm dev
-```
-
-Para modificar la carta:
+Usar conventional commits en español y en modo imperativo:
 
 ```text
-src/data/menuData.js
+feat: agrega el detalle de productos
+fix: corrige el fallback de imágenes
+docs: actualiza la guía de mantenimiento
+test: cubre la navegación por categorías
+ci: verifica lint pruebas y build
 ```
+
+Antes de hacer commit:
+
+```bash
+pnpm check
+git status
+git diff
+```
+
+No subir `node_modules`, `dist` ni archivos locales del editor.

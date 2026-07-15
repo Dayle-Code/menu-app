@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Menú digital</title>
+  <rect width="64" height="64" rx="16" fill="#14351f"/>
+  <path d="M19 15v18M15 15v10c0 4 8 4 8 0V15M19 33v16" fill="none" stroke="#f8f0df" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 15v34M40 15c8 5 8 15 0 20" fill="none" stroke="#d6a84f" stroke-width="4" stroke-linecap="round"/>
+</svg>
