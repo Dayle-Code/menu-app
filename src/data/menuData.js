@@ -27,10 +27,24 @@ export const menuCategories = [
         detailDescription:
           "Una opción clásica de sabor suave, con abundante muzzarella fundida sobre salsa de tomate y un toque de orégano.",
         ingredients: "Masa, salsa de tomate, muzzarella y orégano.",
-        portion: "8 porciones",
         tags: ["Clásica", "Con queso"],
+        featured: true,
         image: productImage("pizzas/muzzarella.svg"),
         price: 1000,
+        variants: [
+          {
+            id: "mediana",
+            name: "Mediana",
+            portion: "8 porciones",
+            price: 1000,
+          },
+          {
+            id: "grande",
+            name: "Grande",
+            portion: "12 porciones",
+            price: 1500,
+          },
+        ],
       },
       {
         id: "napolitana",
@@ -40,10 +54,23 @@ export const menuCategories = [
           "Pizza de base clásica terminada con tomate fresco, ajo y orégano para un sabor más intenso y aromático.",
         ingredients:
           "Masa, salsa de tomate, muzzarella, tomate fresco, ajo y orégano.",
-        portion: "8 porciones",
         tags: ["Con tomate", "Aromática"],
         image: productImage("pizzas/napolitana.svg"),
-        price: 1000,
+        price: 1100,
+        variants: [
+          {
+            id: "mediana",
+            name: "Mediana",
+            portion: "8 porciones",
+            price: 1100,
+          },
+          {
+            id: "grande",
+            name: "Grande",
+            portion: "12 porciones",
+            price: 1600,
+          },
+        ],
       },
     ],
   },
@@ -62,6 +89,7 @@ export const menuCategories = [
         ingredients: "Masa, carne y condimentos.",
         portion: "1 unidad",
         tags: ["Carne", "Casera"],
+        available: false,
         image: productImage("empanadas/carne.svg"),
         price: 1000,
       },
@@ -74,6 +102,7 @@ export const menuCategories = [
         ingredients: "Masa, pollo y condimentos.",
         portion: "1 unidad",
         tags: ["Pollo", "Casera"],
+        isNew: true,
         image: productImage("empanadas/pollo.svg"),
         price: 1000,
       },
@@ -92,10 +121,25 @@ export const menuCategories = [
         detailDescription:
           "Café negro de preparación tradicional, servido caliente y con aroma intenso.",
         ingredients: "Café y agua.",
-        portion: "Taza individual",
         tags: ["Caliente", "Intenso"],
         image: productImage("cafeteria/cafe.svg"),
         price: 1000,
+        variants: [
+          {
+            id: "chico",
+            name: "Chico",
+            portion: "Taza chica",
+            price: 1000,
+          },
+          {
+            id: "grande",
+            name: "Grande",
+            portion: "Taza grande",
+            detailDescription:
+              "Café negro en taza grande, ideal para disfrutar con más tiempo.",
+            price: 1300,
+          },
+        ],
       },
       {
         id: "capuchino",
@@ -106,6 +150,7 @@ export const menuCategories = [
         ingredients: "Café y leche espumada.",
         portion: "Taza individual",
         tags: ["Caliente", "Cremoso"],
+        featured: true,
         image: productImage("cafeteria/capuchino.svg"),
         price: 1000,
       },
@@ -120,24 +165,51 @@ export const menuCategories = [
       {
         id: "coca-cola",
         name: "Coca-Cola",
-        description: "Botella individual.",
+        description: "Gaseosa fría en distintas presentaciones.",
         detailDescription:
-          "Gaseosa fría en presentación individual, lista para acompañar cualquier plato del menú.",
-        portion: "Botella individual",
-        tags: ["Fría", "Individual"],
+          "Gaseosa fría disponible en varios tamaños para acompañar cualquier plato del menú.",
+        tags: ["Fría", "Cola"],
         image: productImage("gaseosas/coca-cola.svg"),
         price: 1000,
+        variants: [
+          {
+            id: "500-ml",
+            name: "500 ml",
+            portion: "Botella individual",
+            price: 1000,
+          },
+          {
+            id: "1-5-l",
+            name: "1,5 litros",
+            portion: "Botella para compartir",
+            price: 1800,
+          },
+        ],
       },
       {
         id: "sprite",
         name: "Sprite",
-        description: "Botella individual.",
+        description: "Gaseosa lima-limón en distintas presentaciones.",
         detailDescription:
-          "Gaseosa lima-limón fría en presentación individual, de sabor fresco y ligero.",
-        portion: "Botella individual",
+          "Gaseosa lima-limón fría, de sabor fresco y ligero, disponible en distintos tamaños.",
         tags: ["Fría", "Lima-limón"],
         image: productImage("gaseosas/sprite.svg"),
         price: 1000,
+        variants: [
+          {
+            id: "500-ml",
+            name: "500 ml",
+            portion: "Botella individual",
+            price: 1000,
+          },
+          {
+            id: "1-5-l",
+            name: "1,5 litros",
+            portion: "Botella para compartir",
+            price: 1800,
+            available: false,
+          },
+        ],
       },
     ],
   },
@@ -157,8 +229,25 @@ export const menuCategories = [
           "Pan, lomo, lechuga, tomate, jamón, queso y huevo.",
         portion: "Sándwich individual",
         tags: ["Completo", "Con lomo"],
+        featured: true,
         image: productImage("sandwiches/lomito.svg"),
         price: 1000,
+        variants: [
+          {
+            id: "clasico",
+            name: "Clásico",
+            portion: "Sándwich individual",
+            price: 1000,
+          },
+          {
+            id: "con-papas",
+            name: "Con papas fritas",
+            portion: "Sándwich con porción de papas",
+            detailDescription:
+              "Lomito completo acompañado por una porción individual de papas fritas.",
+            price: 1500,
+          },
+        ],
       },
     ],
   },
