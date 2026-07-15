@@ -3,14 +3,17 @@ import { ArrowLeft, ImageOff, Search, Sparkles, X } from "lucide-react";
 import CategoryNav from "./components/CategoryNav";
 import ProductCard from "./components/ProductCard";
 import ProductDetailDialog from "./components/ProductDetailDialog";
+import ScrollToTopButton from "./components/ScrollToTopButton";
+import TagFilters from "./components/TagFilters";
 import { siteConfig } from "./config/site";
 import { theme } from "./config/theme";
 import { menuCategories } from "./data/menuData";
 import {
+  filterMenu,
   findCategoryById,
   getCategoryHash,
   getCategoryIdFromHash,
-  searchMenu,
+  getMenuTags,
 } from "./utils/menu";
 
 function getSelectedCategoryId() {
@@ -220,32 +223,43 @@ function SearchField({ query, onChange, onClear, inputRef }) {
   );
 }
 
-function SearchResults({ query, results, onSelectProduct, onClear }) {
+function SearchResults({
+  query,
+  selectedTag,
+  results,
+  onSelectProduct,
+  onClearFilters,
+}) {
+  const normalizedQuery = query.trim();
+  const resultLabel = results.length === 1 ? "coincidencia" : "coincidencias";
+  const productLabel = results.length === 1 ? "producto" : "productos";
+  const summary = normalizedQuery
+    ? selectedTag
+      ? `${results.length} ${resultLabel} para “${normalizedQuery}” en “${selectedTag}”`
+      : `${results.length} ${resultLabel} para “${normalizedQuery}”`
+    : `${results.length} ${productLabel} con “${selectedTag}”`;
+
   return (
     <section aria-labelledby="search-results-title" className="mt-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2
-            id="search-results-title"
-            className="font-serif text-2xl font-semibold"
-            style={{ color: theme.colors.primary }}
-          >
-            Resultados
-          </h2>
-          <p
-            aria-live="polite"
-            className="mt-1 text-sm"
-            style={{ color: theme.colors.productDescription }}
-          >
-            {results.length === 1
-              ? `1 coincidencia para “${query}”`
-              : `${results.length} coincidencias para “${query}”`}
-          </p>
-        </div>
+      <div>
+        <h2
+          id="search-results-title"
+          className="font-serif text-2xl font-semibold"
+          style={{ color: theme.colors.primary }}
+        >
+          Resultados
+        </h2>
+        <p
+          aria-live="polite"
+          className="mt-1 text-sm"
+          style={{ color: theme.colors.productDescription }}
+        >
+          {summary}
+        </p>
       </div>
 
       {results.length > 0 ? (
-        <ul className="mt-4 space-y-3">
+        <ul className="mt-4 space-y-2.5">
           {results.map(({ category, product }) => (
             <li key={`${category.id}-${product.id}`}>
               <ProductCard
@@ -267,10 +281,10 @@ function SearchResults({ query, results, onSelectProduct, onClear }) {
             color: theme.colors.productDescription,
           }}
         >
-          <p className="font-medium">No encontramos productos con esa búsqueda.</p>
+          <p className="font-medium">No encontramos productos con esos filtros.</p>
           <button
             type="button"
-            onClick={onClear}
+            onClick={onClearFilters}
             className="interactive-control mt-4 rounded-full border px-4 py-2 text-sm font-semibold"
             style={{
               backgroundColor: theme.colors.iconOuterBackground,
@@ -278,7 +292,7 @@ function SearchResults({ query, results, onSelectProduct, onClear }) {
               color: theme.colors.primary,
             }}
           >
-            Limpiar búsqueda
+            Limpiar filtros
           </button>
         </div>
       )}
@@ -288,14 +302,18 @@ function SearchResults({ query, results, onSelectProduct, onClear }) {
 
 function HomePage({
   searchQuery,
-  searchResults,
+  selectedTag,
+  menuTags,
+  filteredResults,
   searchInputRef,
   onSearchChange,
   onClearSearch,
+  onSelectTag,
+  onClearFilters,
   onSelectCategory,
   onSelectProduct,
 }) {
-  const hasSearch = searchQuery.trim().length > 0;
+  const hasFilters = searchQuery.trim().length > 0 || Boolean(selectedTag);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -309,12 +327,19 @@ function HomePage({
           inputRef={searchInputRef}
         />
 
-        {hasSearch ? (
+        <TagFilters
+          tags={menuTags}
+          selectedTag={selectedTag}
+          onSelectTag={onSelectTag}
+        />
+
+        {hasFilters ? (
           <SearchResults
             query={searchQuery}
-            results={searchResults}
+            selectedTag={selectedTag}
+            results={filteredResults}
             onSelectProduct={onSelectProduct}
-            onClear={onClearSearch}
+            onClearFilters={onClearFilters}
           />
         ) : (
           <section
@@ -425,7 +450,7 @@ function CategoryPage({
         </h2>
 
         {products.length > 0 ? (
-          <ul className="space-y-3">
+          <ul className="space-y-2.5">
             {products.map((product) => (
               <li key={product.id}>
                 <ProductCard
@@ -476,14 +501,20 @@ function App() {
   );
   const [selectedProductDetail, setSelectedProductDetail] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTag, setSelectedTag] = useState(null);
   const searchInputRef = useRef(null);
   const selectedCategory = findCategoryById(
     menuCategories,
     selectedCategoryId,
   );
-  const searchResults = useMemo(
-    () => searchMenu(menuCategories, searchQuery),
-    [searchQuery],
+  const menuTags = useMemo(() => getMenuTags(menuCategories), []);
+  const filteredResults = useMemo(
+    () =>
+      filterMenu(menuCategories, {
+        query: searchQuery,
+        tag: selectedTag,
+      }),
+    [searchQuery, selectedTag],
   );
 
   useEffect(() => {
@@ -511,6 +542,13 @@ function App() {
     });
   };
 
+  const showHome = (historyState = null) => {
+    const homeUrl = `${window.location.pathname}${window.location.search}`;
+    window.history.pushState(historyState, "", homeUrl);
+    setSelectedCategoryId(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleSelectCategory = (category) => {
     setSelectedProductDetail(null);
 
@@ -534,10 +572,7 @@ function App() {
     setSelectedProductDetail(null);
 
     if (selectedCategoryId) {
-      const homeUrl = `${window.location.pathname}${window.location.search}`;
-      window.history.pushState({ menuSearch: true }, "", homeUrl);
-      setSelectedCategoryId(null);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      showHome({ menuSearch: true });
     }
 
     focusSearch();
@@ -561,6 +596,24 @@ function App() {
     setSelectedProductDetail({ product, category });
   };
 
+  const handleSelectTagFromDetail = (tag) => {
+    setSelectedProductDetail(null);
+    setSearchQuery("");
+    setSelectedTag(tag);
+
+    if (selectedCategoryId) {
+      showHome({ menuTag: tag });
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedTag(null);
+  };
+
   return (
     <main
       className="flex min-h-screen justify-center"
@@ -582,10 +635,14 @@ function App() {
         ) : (
           <HomePage
             searchQuery={searchQuery}
-            searchResults={searchResults}
+            selectedTag={selectedTag}
+            menuTags={menuTags}
+            filteredResults={filteredResults}
             searchInputRef={searchInputRef}
             onSearchChange={setSearchQuery}
             onClearSearch={() => setSearchQuery("")}
+            onSelectTag={setSelectedTag}
+            onClearFilters={clearFilters}
             onSelectCategory={handleSelectCategory}
             onSelectProduct={handleSelectProduct}
           />
@@ -593,11 +650,15 @@ function App() {
       </section>
 
       <ProductDetailDialog
+        key={selectedProductDetail?.product.id ?? "closed-product-detail"}
         product={selectedProductDetail?.product ?? null}
         category={selectedProductDetail?.category ?? null}
         open={Boolean(selectedProductDetail)}
         onClose={() => setSelectedProductDetail(null)}
+        onSelectTag={handleSelectTagFromDetail}
       />
+
+      <ScrollToTopButton />
     </main>
   );
 }

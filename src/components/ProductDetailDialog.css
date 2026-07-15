@@ -24,12 +24,36 @@
   border-bottom: 0;
   border-radius: 28px 28px 0 0;
   box-shadow: 0 -12px 40px rgba(8, 20, 12, 0.24);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
   animation: product-dialog-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.product-detail-dialog__panel--dragging {
+  cursor: grabbing;
+  transition: none;
+  animation: none;
+  user-select: none;
+}
+
+.product-detail-dialog__panel--dismissing {
+  transition: transform 180ms cubic-bezier(0.4, 0, 1, 1);
+  animation: none;
+}
+
+.product-detail-dialog__drag-area {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 66px;
+  left: 0;
+  height: 56px;
+  touch-action: none;
+  cursor: grab;
 }
 
 .product-detail-dialog__handle {
   position: absolute;
-  z-index: 2;
   top: 10px;
   left: 50%;
   width: 42px;
@@ -110,6 +134,11 @@
     box-shadow: 0 18px 60px rgba(8, 20, 12, 0.3);
   }
 
+  .product-detail-dialog__drag-area {
+    pointer-events: none;
+    cursor: default;
+  }
+
   .product-detail-dialog__content {
     padding-bottom: 22px;
   }
@@ -122,7 +151,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .product-detail-dialog__panel {
+  .product-detail-dialog__panel,
+  .product-detail-dialog__panel--dismissing {
+    transition: none;
     animation: none;
   }
 }

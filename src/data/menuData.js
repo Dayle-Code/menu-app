@@ -35,13 +35,13 @@ export const menuCategories = [
           {
             id: "mediana",
             name: "Mediana",
-            description: "8 porciones",
+            portion: "8 porciones",
             price: 1000,
           },
           {
             id: "grande",
             name: "Grande",
-            description: "12 porciones",
+            portion: "12 porciones",
             price: 1500,
           },
         ],
@@ -61,13 +61,13 @@ export const menuCategories = [
           {
             id: "mediana",
             name: "Mediana",
-            description: "8 porciones",
+            portion: "8 porciones",
             price: 1100,
           },
           {
             id: "grande",
             name: "Grande",
-            description: "12 porciones",
+            portion: "12 porciones",
             price: 1600,
           },
         ],
@@ -125,8 +125,20 @@ export const menuCategories = [
         image: productImage("cafeteria/cafe.svg"),
         price: 1000,
         variants: [
-          { id: "chico", name: "Chico", price: 1000 },
-          { id: "grande", name: "Grande", price: 1300 },
+          {
+            id: "chico",
+            name: "Chico",
+            portion: "Taza chica",
+            price: 1000,
+          },
+          {
+            id: "grande",
+            name: "Grande",
+            portion: "Taza grande",
+            detailDescription:
+              "Café negro en taza grande, ideal para disfrutar con más tiempo.",
+            price: 1300,
+          },
         ],
       },
       {
@@ -160,8 +172,18 @@ export const menuCategories = [
         image: productImage("gaseosas/coca-cola.svg"),
         price: 1000,
         variants: [
-          { id: "500-ml", name: "500 ml", price: 1000 },
-          { id: "1-5-l", name: "1,5 litros", price: 1800 },
+          {
+            id: "500-ml",
+            name: "500 ml",
+            portion: "Botella individual",
+            price: 1000,
+          },
+          {
+            id: "1-5-l",
+            name: "1,5 litros",
+            portion: "Botella para compartir",
+            price: 1800,
+          },
         ],
       },
       {
@@ -174,10 +196,16 @@ export const menuCategories = [
         image: productImage("gaseosas/sprite.svg"),
         price: 1000,
         variants: [
-          { id: "500-ml", name: "500 ml", price: 1000 },
+          {
+            id: "500-ml",
+            name: "500 ml",
+            portion: "Botella individual",
+            price: 1000,
+          },
           {
             id: "1-5-l",
             name: "1,5 litros",
+            portion: "Botella para compartir",
             price: 1800,
             available: false,
           },
@@ -205,10 +233,18 @@ export const menuCategories = [
         image: productImage("sandwiches/lomito.svg"),
         price: 1000,
         variants: [
-          { id: "clasico", name: "Clásico", price: 1000 },
+          {
+            id: "clasico",
+            name: "Clásico",
+            portion: "Sándwich individual",
+            price: 1000,
+          },
           {
             id: "con-papas",
             name: "Con papas fritas",
+            portion: "Sándwich con porción de papas",
+            detailDescription:
+              "Lomito completo acompañado por una porción individual de papas fritas.",
             price: 1500,
           },
         ],

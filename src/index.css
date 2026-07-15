@@ -71,3 +71,28 @@ input[type="search"]::-webkit-search-cancel-button {
     animation-iteration-count: 1 !important;
   }
 }
+
+.tag-filters__track {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.tag-filters__track::-webkit-scrollbar {
+  display: none;
+}
+
+.product-card__description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.scroll-to-top-button {
+  right: max(16px, calc((100vw - 430px) / 2 + 16px));
+  bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+button:disabled {
+  cursor: not-allowed;
+}

@@ -36,34 +36,35 @@ function getCommercialBadges(product) {
   return badges;
 }
 
-function ProductBadges({ product, includeTags = false, className = "" }) {
+function ProductBadges({
+  product,
+  includeTags = false,
+  maxTags = Number.POSITIVE_INFINITY,
+  onTagSelect,
+  className = "",
+}) {
   const commercialBadges = getCommercialBadges(product);
-  const tagBadges = includeTags
-    ? (product?.tags ?? []).map((tag) => ({
-        id: `tag-${tag}`,
-        label: tag,
-        backgroundColor: theme.colors.iconOuterBackground,
-        borderColor: theme.colors.border,
-        color: theme.colors.accentDark,
-      }))
-    : [];
-  const badges = [...commercialBadges, ...tagBadges];
+  const allTags = includeTags ? product?.tags ?? [] : [];
+  const visibleTags = allTags.slice(0, maxTags);
+  const hiddenTagsCount = Math.max(0, allTags.length - visibleTags.length);
 
-  if (badges.length === 0) {
+  if (
+    commercialBadges.length === 0 &&
+    visibleTags.length === 0 &&
+    hiddenTagsCount === 0
+  ) {
     return null;
   }
 
   return (
     <div
-      role="list"
       aria-label="Características del producto"
-      className={`flex flex-wrap gap-2 ${className}`.trim()}
+      className={`flex flex-wrap gap-1.5 ${className}`.trim()}
     >
-      {badges.map((badge) => (
+      {commercialBadges.map((badge) => (
         <span
-          role="listitem"
           key={badge.id}
-          className="rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-none"
+          className="rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none"
           style={{
             backgroundColor: badge.backgroundColor,
             borderColor: badge.borderColor,
@@ -73,6 +74,49 @@ function ProductBadges({ product, includeTags = false, className = "" }) {
           {badge.label}
         </span>
       ))}
+
+      {visibleTags.map((tag) => {
+        const sharedProps = {
+          className:
+            "rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none",
+          style: {
+            backgroundColor: theme.colors.iconOuterBackground,
+            borderColor: theme.colors.border,
+            color: theme.colors.accentDark,
+          },
+        };
+
+        return onTagSelect ? (
+          <button
+            {...sharedProps}
+            key={tag}
+            type="button"
+            onClick={() => onTagSelect(tag)}
+            aria-label={`Filtrar la carta por ${tag}`}
+            className={`${sharedProps.className} interactive-control`}
+          >
+            {tag}
+          </button>
+        ) : (
+          <span {...sharedProps} key={tag}>
+            {tag}
+          </span>
+        );
+      })}
+
+      {hiddenTagsCount > 0 && (
+        <span
+          aria-label={`${hiddenTagsCount} etiquetas más`}
+          className="rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none"
+          style={{
+            backgroundColor: theme.colors.productCard,
+            borderColor: theme.colors.border,
+            color: theme.colors.productDescription,
+          }}
+        >
+          +{hiddenTagsCount}
+        </span>
+      )}
     </div>
   );
 }

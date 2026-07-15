@@ -1,11 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  filterMenu,
   findCategoryById,
   formatPrice,
   formatProductPrice,
   getCategoryHash,
   getCategoryIdFromHash,
+  getDefaultVariant,
+  getMenuTags,
   getProductStartingPrice,
   normalizeSearchText,
   searchMenu,
@@ -53,6 +56,19 @@ test("no muestra desde cuando las variantes disponibles valen lo mismo", () => {
   );
 });
 
+test("selecciona por defecto la primera variante disponible", () => {
+  const product = {
+    variants: [
+      { id: "chico", price: 1000, available: false },
+      { id: "mediano", price: 1200 },
+      { id: "grande", price: 1500 },
+    ],
+  };
+
+  assert.equal(getDefaultVariant(product)?.id, "mediano");
+  assert.equal(getDefaultVariant({ variants: [] }), null);
+});
+
 test("normaliza mayúsculas y tildes para buscar", () => {
   assert.equal(normalizeSearchText("  CAFETERÍA  "), "cafeteria");
 });
@@ -69,7 +85,14 @@ test("busca productos por etiqueta, ingrediente y variante", () => {
           description: "Café con leche.",
           ingredients: "Café y leche espumada",
           tags: ["Cremoso"],
-          variants: [{ id: "grande", name: "Grande", price: 2000 }],
+          variants: [
+            {
+              id: "grande",
+              name: "Grande",
+              portion: "Taza grande",
+              price: 2000,
+            },
+          ],
         },
       ],
     },
@@ -78,7 +101,48 @@ test("busca productos por etiqueta, ingrediente y variante", () => {
   assert.equal(searchMenu(categories, "cremoso").length, 1);
   assert.equal(searchMenu(categories, "leche espumada").length, 1);
   assert.equal(searchMenu(categories, "cafeteria grande").length, 1);
+  assert.equal(searchMenu(categories, "taza grande").length, 1);
   assert.equal(searchMenu(categories, "pizza").length, 0);
+});
+
+test("filtra por etiqueta y la combina con el texto de búsqueda", () => {
+  const categories = [
+    {
+      id: "cafeteria",
+      title: "Cafetería",
+      products: [
+        { id: "cafe", name: "Café", tags: ["Caliente", "Intenso"] },
+        {
+          id: "capuchino",
+          name: "Capuchino",
+          tags: ["Caliente", "Cremoso"],
+        },
+      ],
+    },
+  ];
+
+  assert.equal(filterMenu(categories, { tag: "caliente" }).length, 2);
+  assert.equal(
+    filterMenu(categories, { query: "capuchino", tag: "caliente" }).length,
+    1,
+  );
+  assert.equal(
+    filterMenu(categories, { query: "intenso", tag: "cremoso" }).length,
+    0,
+  );
+});
+
+test("obtiene etiquetas únicas y ordenadas", () => {
+  const categories = [
+    {
+      products: [
+        { tags: ["Cremoso", "Caliente"] },
+        { tags: ["caliente", "Aromática"] },
+      ],
+    },
+  ];
+
+  assert.deepEqual(getMenuTags(categories), ["Aromática", "Caliente", "Cremoso"]);
 });
 
 test("construye y lee el hash de una categoría", () => {
