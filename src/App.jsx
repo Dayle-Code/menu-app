@@ -294,20 +294,12 @@ function HomePage({
   onClearSearch,
   onSelectCategory,
   onSelectProduct,
-  onShowSearch,
 }) {
   const hasSearch = searchQuery.trim().length > 0;
 
   return (
     <div className="flex min-h-screen flex-col">
       <HomeHeader />
-
-      <CategoryNav
-        categories={menuCategories}
-        activeCategoryId={null}
-        onSelectCategory={onSelectCategory}
-        onShowSearch={onShowSearch}
-      />
 
       <div className="px-4 pb-5 pt-4">
         <SearchField
@@ -596,7 +588,6 @@ function App() {
             onClearSearch={() => setSearchQuery("")}
             onSelectCategory={handleSelectCategory}
             onSelectProduct={handleSelectProduct}
-            onShowSearch={handleShowSearch}
           />
         )}
       </section>
