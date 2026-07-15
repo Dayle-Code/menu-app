@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, ImageOff, Sparkles } from "lucide-react";
+import ProductDetailDialog from "./components/ProductDetailDialog";
 import { siteConfig } from "./config/site";
 import { theme } from "./config/theme";
 import { menuCategories } from "./data/menuData";
@@ -207,7 +208,7 @@ function EmptyCategoryState() {
   );
 }
 
-function CategoryPage({ category, onBack }) {
+function CategoryPage({ category, onBack, onSelectProduct }) {
   const products = category.products ?? [];
 
   return (
@@ -262,8 +263,11 @@ function CategoryPage({ category, onBack }) {
           <ul className="space-y-3">
             {products.map((product) => (
               <li key={product.id}>
-                <article
-                  className="flex w-full items-start justify-between gap-4 border p-4 shadow-sm"
+                <button
+                  type="button"
+                  onClick={() => onSelectProduct(product)}
+                  aria-label={`Ver detalle de ${product.name}`}
+                  className="interactive-control flex w-full items-start justify-between gap-4 border p-4 text-left shadow-sm transition active:scale-[0.99]"
                   style={{
                     backgroundColor: theme.colors.productCard,
                     borderColor: theme.colors.border,
@@ -292,7 +296,7 @@ function CategoryPage({ category, onBack }) {
                   >
                     {formatPrice(product.price)}
                   </span>
-                </article>
+                </button>
               </li>
             ))}
           </ul>
@@ -334,6 +338,7 @@ function App() {
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     getSelectedCategoryId,
   );
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const selectedCategory = findCategoryById(
     menuCategories,
     selectedCategoryId,
@@ -341,6 +346,7 @@ function App() {
 
   useEffect(() => {
     const handleHistoryChange = () => {
+      setSelectedProduct(null);
       setSelectedCategoryId(getSelectedCategoryId());
     };
 
@@ -354,6 +360,7 @@ function App() {
   }, []);
 
   const handleSelectCategory = (category) => {
+    setSelectedProduct(null);
     const nextUrl = `${window.location.pathname}${window.location.search}${getCategoryHash(category.id)}`;
 
     window.history.pushState(
@@ -366,6 +373,8 @@ function App() {
   };
 
   const handleBack = () => {
+    setSelectedProduct(null);
+
     if (window.history.state?.menuCategory) {
       window.history.back();
       return;
@@ -388,11 +397,22 @@ function App() {
         aria-label={`Menú digital de ${siteConfig.businessName}`}
       >
         {selectedCategory ? (
-          <CategoryPage category={selectedCategory} onBack={handleBack} />
+          <CategoryPage
+            category={selectedCategory}
+            onBack={handleBack}
+            onSelectProduct={setSelectedProduct}
+          />
         ) : (
           <HomePage onSelectCategory={handleSelectCategory} />
         )}
       </section>
+
+      <ProductDetailDialog
+        product={selectedProduct}
+        categoryTitle={selectedCategory?.title}
+        open={Boolean(selectedProduct)}
+        onClose={() => setSelectedProduct(null)}
+      />
     </main>
   );
 }
