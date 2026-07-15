@@ -13,6 +13,7 @@
 .product-detail-dialog::backdrop {
   background: rgba(8, 20, 12, 0.68);
   backdrop-filter: blur(2px);
+  animation: product-backdrop-in 220ms ease-out both;
 }
 
 .product-detail-dialog__panel {
@@ -24,8 +25,10 @@
   border-bottom: 0;
   border-radius: 28px 28px 0 0;
   box-shadow: 0 -12px 40px rgba(8, 20, 12, 0.24);
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  animation: product-dialog-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease;
+  animation: product-dialog-in 300ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
@@ -34,6 +37,7 @@
   transition: none;
   animation: none;
   user-select: none;
+  box-shadow: 0 -6px 24px rgba(8, 20, 12, 0.18);
 }
 
 .product-detail-dialog__panel--dismissing {
@@ -62,6 +66,15 @@
   background: rgba(255, 255, 255, 0.82);
   box-shadow: 0 1px 4px rgba(8, 20, 12, 0.28);
   transform: translateX(-50%);
+  transition:
+    width 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.product-detail-dialog__panel--dragging .product-detail-dialog__handle {
+  width: 54px;
+  opacity: 0.95;
 }
 
 .product-detail-dialog__close {
@@ -76,6 +89,14 @@
   justify-content: center;
   border-radius: 999px;
   box-shadow: 0 4px 14px rgba(8, 20, 12, 0.24);
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    background-color 220ms ease;
+}
+
+.product-detail-dialog__close:active {
+  transform: scale(0.92);
 }
 
 .product-detail-dialog__visual {
@@ -109,15 +130,185 @@
   padding: 22px 22px calc(22px + env(safe-area-inset-bottom));
 }
 
+.product-detail-dialog__content > * {
+  opacity: 0;
+  animation: product-content-in 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.product-detail-dialog__content > :nth-child(1) {
+  animation-delay: 45ms;
+}
+
+.product-detail-dialog__content > :nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.product-detail-dialog__content > :nth-child(3) {
+  animation-delay: 95ms;
+}
+
+.product-detail-dialog__content > :nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.product-detail-dialog__content > :nth-child(n + 5) {
+  animation-delay: 145ms;
+}
+
+.product-detail-dialog__price-summary {
+  transform-origin: right center;
+  animation: product-price-update 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.product-detail-dialog__variant {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease,
+    opacity 160ms ease;
+}
+
+.product-detail-dialog__variant[aria-checked="true"] {
+  box-shadow: 0 6px 18px rgba(70, 45, 20, 0.1);
+  animation: product-variant-selected 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.product-detail-dialog__variant-check {
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.product-detail-dialog__variant[aria-checked="true"]
+  .product-detail-dialog__variant-check {
+  transform: scale(1.08);
+}
+
+.product-detail-dialog__variant-check svg {
+  animation: product-check-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.product-detail-dialog .product-badge--tag {
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.product-detail-dialog__content > button:last-child {
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    filter 220ms ease;
+}
+
+.product-detail-dialog__content > button:last-child:active {
+  transform: scale(0.985);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-detail-dialog__close:hover {
+    transform: rotate(4deg) scale(1.04);
+    box-shadow: 0 7px 20px rgba(8, 20, 12, 0.24);
+  }
+
+  .product-detail-dialog__variant:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 18px rgba(70, 45, 20, 0.09);
+  }
+
+  .product-detail-dialog .product-badge--tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(70, 45, 20, 0.09);
+  }
+
+  .product-detail-dialog__content > button:last-child:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 9px 20px rgba(8, 20, 12, 0.18);
+    filter: brightness(1.04);
+  }
+}
+
+@keyframes product-backdrop-in {
+  from {
+    background: rgba(8, 20, 12, 0);
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    background: rgba(8, 20, 12, 0.68);
+    backdrop-filter: blur(2px);
+  }
+}
+
 @keyframes product-dialog-in {
   from {
-    transform: translateY(28px);
+    transform: translateY(34px) scale(0.985);
     opacity: 0;
   }
 
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes product-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes product-price-update {
+  0% {
+    opacity: 0.55;
+    transform: translateY(3px) scale(0.96);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(0) scale(1.035);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes product-variant-selected {
+  0% {
+    transform: scale(0.985);
+  }
+
+  65% {
+    transform: scale(1.008);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes product-check-in {
+  from {
+    opacity: 0;
+    transform: scale(0.55) rotate(-12deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
   }
 }
 
@@ -151,9 +342,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .product-detail-dialog::backdrop,
   .product-detail-dialog__panel,
-  .product-detail-dialog__panel--dismissing {
+  .product-detail-dialog__panel--dismissing,
+  .product-detail-dialog__content > *,
+  .product-detail-dialog__price-summary,
+  .product-detail-dialog__variant[aria-checked="true"],
+  .product-detail-dialog__variant-check svg {
     transition: none;
     animation: none;
+  }
+
+  .product-detail-dialog__content > * {
+    opacity: 1;
+    transform: none;
   }
 }
