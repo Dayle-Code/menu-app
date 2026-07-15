@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Sándwich</title>
+  <rect width="160" height="160" fill="#f0ddb6"/>
+  <path d="M29 64c7-30 95-30 102 0H29Z" fill="#e7b55c" stroke="#173d25" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M31 73h98l-12 21H43L31 73Z" fill="#6b9d55" stroke="#173d25" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M43 94h74l14 26H29l14-26Z" fill="#e7b55c" stroke="#173d25" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M50 85h60" stroke="#d6a84f" stroke-width="7" stroke-linecap="round"/>
+</svg>

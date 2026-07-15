@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">Gaseosa</title>
+  <rect width="160" height="160" fill="#f0ddb6"/>
+  <path d="M63 22h34M69 22v21l-10 15v75h42V58L91 43V22" fill="#faf3e5" stroke="#173d25" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M59 78h42v34H59z" fill="#b9822c" opacity=".82"/>
+  <circle cx="80" cy="95" r="8" fill="#f8f0df"/>
+  <path d="M69 43h22" stroke="#173d25" stroke-width="7" stroke-linecap="round"/>
+</svg>
