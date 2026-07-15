@@ -12,7 +12,7 @@ function CategoryNav({
 
   useEffect(() => {
     activeButtonRef.current?.scrollIntoView({
-      behavior: "auto",
+      behavior: "smooth",
       block: "nearest",
       inline: "center",
     });

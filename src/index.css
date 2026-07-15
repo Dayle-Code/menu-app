@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
+:root {
+  --motion-fast: 160ms;
+  --motion-medium: 240ms;
+  --motion-slow: 420ms;
+  --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
   color-scheme: light;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -33,27 +42,14 @@ button {
   font: inherit;
 }
 
-.category-nav {
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-}
-
-.category-nav__track {
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
-}
-
-.category-nav__track::-webkit-scrollbar {
-  display: none;
-}
-
-.menu-search-field:focus-within {
-  outline: 3px solid #b9822c;
-  outline-offset: 3px;
-}
-
-input[type="search"]::-webkit-search-cancel-button {
-  display: none;
+.interactive-control {
+  transition:
+    transform var(--motion-fast) var(--motion-ease-out),
+    box-shadow var(--motion-medium) var(--motion-ease-out),
+    border-color var(--motion-medium) ease,
+    background-color var(--motion-medium) ease,
+    color var(--motion-medium) ease,
+    opacity var(--motion-fast) ease;
 }
 
 .interactive-control:focus-visible {
@@ -61,24 +57,170 @@ input[type="search"]::-webkit-search-cancel-button {
   outline-offset: 3px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
+.interactive-control:active:not(:disabled) {
+  transform: scale(0.975);
+}
+
+main > section > div {
+  animation: menu-view-in var(--motion-slow) var(--motion-ease-out) both;
+}
+
+main > section > div > header:first-child {
+  animation: menu-header-in 520ms var(--motion-ease-out) both;
+}
+
+[aria-labelledby="categories-title"] > button {
+  opacity: 0;
+  animation: menu-item-in 460ms var(--motion-ease-out) both;
+}
+
+[aria-labelledby="categories-title"] > button:nth-of-type(1) {
+  animation-delay: 35ms;
+}
+
+[aria-labelledby="categories-title"] > button:nth-of-type(2) {
+  animation-delay: 70ms;
+}
+
+[aria-labelledby="categories-title"] > button:nth-of-type(3) {
+  animation-delay: 105ms;
+}
+
+[aria-labelledby="categories-title"] > button:nth-of-type(4) {
+  animation-delay: 140ms;
+}
+
+[aria-labelledby="categories-title"] > button:nth-of-type(5) {
+  animation-delay: 175ms;
+}
+
+[aria-labelledby="categories-title"] > button:nth-of-type(6) {
+  animation-delay: 210ms;
+}
+
+[aria-label^="Ver categoría"] {
+  will-change: transform;
+}
+
+[aria-label^="Ver categoría"] > div:first-of-type {
+  transition: transform var(--motion-medium) var(--motion-ease-out);
+}
+
+[aria-label^="Ver categoría"] > div:last-child {
+  transform-origin: center;
+  transition: transform var(--motion-medium) var(--motion-ease-out);
+}
+
+[aria-label^="Ver categoría"] svg {
+  transition:
+    transform var(--motion-medium) var(--motion-ease-out),
+    opacity var(--motion-medium) ease;
+}
+
+.category-nav {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 7px 18px rgba(20, 53, 31, 0.06);
+  animation: menu-nav-in 300ms var(--motion-ease-out) both;
+}
+
+.category-nav__track {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+}
+
+.category-nav__track::-webkit-scrollbar {
+  display: none;
+}
+
+.category-nav button,
+.tag-filters button {
+  transform-origin: center;
+}
+
+.category-nav button[aria-current="page"],
+.tag-filters button[aria-pressed="true"] {
+  animation: control-selected 260ms var(--motion-ease-out);
+  box-shadow: 0 5px 14px rgba(20, 53, 31, 0.12);
+}
+
+.menu-search-field {
+  transition:
+    border-color var(--motion-medium) ease,
+    box-shadow var(--motion-medium) var(--motion-ease-out),
+    transform var(--motion-medium) var(--motion-ease-out),
+    background-color var(--motion-medium) ease;
+}
+
+.menu-search-field > svg {
+  transition:
+    transform var(--motion-medium) var(--motion-ease-out),
+    color var(--motion-medium) ease;
+}
+
+.menu-search-field:focus-within {
+  outline: 3px solid #b9822c;
+  outline-offset: 3px;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(70, 45, 20, 0.1);
+}
+
+.menu-search-field:focus-within > svg {
+  transform: scale(1.08) rotate(-5deg);
+}
+
+.menu-search-field button {
+  animation: control-pop 220ms var(--motion-ease-out) both;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
 }
 
 .tag-filters__track {
   scrollbar-width: none;
   overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
 }
 
 .tag-filters__track::-webkit-scrollbar {
   display: none;
+}
+
+.product-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  will-change: transform;
+  transition:
+    transform var(--motion-fast) var(--motion-ease-out),
+    box-shadow var(--motion-medium) var(--motion-ease-out),
+    border-color var(--motion-medium) ease,
+    opacity var(--motion-fast) ease;
+}
+
+.product-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 15%,
+    rgba(185, 130, 44, 0.06) 50%,
+    transparent 85%
+  );
+  opacity: 0;
+  transform: translateX(-35%);
+  transition:
+    opacity var(--motion-medium) ease,
+    transform 520ms var(--motion-ease-out);
+}
+
+.product-card > span:last-child {
+  transition: transform var(--motion-medium) var(--motion-ease-out);
 }
 
 .product-card__description {
@@ -88,11 +230,263 @@ input[type="search"]::-webkit-search-cancel-button {
   -webkit-line-clamp: 2;
 }
 
+#products-title + ul > li,
+section[aria-labelledby="search-results-title"] > ul > li {
+  opacity: 0;
+  animation: menu-item-in 380ms var(--motion-ease-out) both;
+}
+
+#products-title + ul > li:nth-child(1),
+section[aria-labelledby="search-results-title"] > ul > li:nth-child(1) {
+  animation-delay: 30ms;
+}
+
+#products-title + ul > li:nth-child(2),
+section[aria-labelledby="search-results-title"] > ul > li:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+#products-title + ul > li:nth-child(3),
+section[aria-labelledby="search-results-title"] > ul > li:nth-child(3) {
+  animation-delay: 90ms;
+}
+
+#products-title + ul > li:nth-child(4),
+section[aria-labelledby="search-results-title"] > ul > li:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+#products-title + ul > li:nth-child(5),
+section[aria-labelledby="search-results-title"] > ul > li:nth-child(5) {
+  animation-delay: 150ms;
+}
+
+#products-title + ul > li:nth-child(n + 6),
+section[aria-labelledby="search-results-title"] > ul > li:nth-child(n + 6) {
+  animation-delay: 180ms;
+}
+
+.product-badges {
+  align-items: center;
+}
+
+.product-badge {
+  transition:
+    transform var(--motion-fast) var(--motion-ease-out),
+    box-shadow var(--motion-medium) var(--motion-ease-out),
+    border-color var(--motion-medium) ease;
+}
+
+.product-badge--tag:active {
+  transform: scale(0.94);
+}
+
+[role="status"] {
+  animation: feedback-in 300ms var(--motion-ease-out) both;
+}
+
 .scroll-to-top-button {
   right: max(16px, calc((100vw - 430px) / 2 + 16px));
   bottom: calc(16px + env(safe-area-inset-bottom));
+  animation: scroll-control-in 320ms var(--motion-ease-out) both;
+  transition:
+    transform var(--motion-fast) var(--motion-ease-out),
+    box-shadow var(--motion-medium) var(--motion-ease-out),
+    background-color var(--motion-medium) ease;
+}
+
+.scroll-to-top-button svg {
+  transition: transform var(--motion-medium) var(--motion-ease-out);
+}
+
+main footer [aria-hidden="true"] {
+  animation: footer-heart-in 620ms 260ms var(--motion-ease-out) both;
 }
 
 button:disabled {
   cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [aria-label^="Ver categoría"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(70, 45, 20, 0.16) !important;
+  }
+
+  [aria-label^="Ver categoría"]:hover > div:first-of-type {
+    transform: scale(1.045) rotate(-1deg);
+  }
+
+  [aria-label^="Ver categoría"]:hover > div:last-child {
+    transform: scaleX(1.22);
+  }
+
+  [aria-label^="Ver categoría"]:hover svg {
+    transform: scale(1.08) rotate(5deg);
+  }
+
+  .category-nav button:hover,
+  .tag-filters button:hover,
+  .product-badge--tag:hover {
+    transform: translateY(-1px);
+  }
+
+  .product-card:hover {
+    transform: translateY(-2px);
+    border-color: #d9c5a4 !important;
+    box-shadow: 0 9px 24px rgba(70, 45, 20, 0.12);
+  }
+
+  .product-card:hover::after {
+    opacity: 1;
+    transform: translateX(35%);
+  }
+
+  .product-card:hover > span:last-child {
+    transform: translateX(-2px);
+  }
+
+  .product-badge--tag:hover {
+    box-shadow: 0 4px 12px rgba(70, 45, 20, 0.09);
+  }
+
+  .scroll-to-top-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(8, 20, 12, 0.24);
+  }
+
+  .scroll-to-top-button:hover svg {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes menu-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-header-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes menu-nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes control-selected {
+  0% {
+    transform: scale(0.96);
+  }
+
+  65% {
+    transform: scale(1.025);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes control-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes feedback-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-control-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.86);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes footer-heart-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

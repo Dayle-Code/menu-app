@@ -295,7 +295,11 @@ function ProductDetailDialog({
               {product?.name ?? "Producto"}
             </h2>
 
-            <div className="shrink-0 text-right">
+            <div
+              key={selectedVariant?.id ?? "base-price"}
+              aria-live="polite"
+              className="product-detail-dialog__price-summary shrink-0 text-right"
+            >
               <strong
                 className="block text-xl"
                 style={{ color: theme.colors.price }}
@@ -369,7 +373,7 @@ function ProductDetailDialog({
                       aria-checked={isSelected}
                       disabled={variantUnavailable}
                       onClick={() => setSelectedVariantId(variant.id)}
-                      className="interactive-control flex items-center justify-between gap-3 rounded-2xl border px-3.5 py-3 text-left"
+                      className="interactive-control product-detail-dialog__variant flex items-center justify-between gap-3 rounded-2xl border px-3.5 py-3 text-left"
                       style={{
                         backgroundColor: variantUnavailable
                           ? theme.colors.statusUnavailableBackground
@@ -387,7 +391,7 @@ function ProductDetailDialog({
                       <span className="flex min-w-0 items-center gap-3">
                         <span
                           aria-hidden="true"
-                          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border"
+                          className="product-detail-dialog__variant-check flex h-5 w-5 shrink-0 items-center justify-center rounded-full border"
                           style={{
                             backgroundColor: isSelected
                               ? theme.colors.darkGreen

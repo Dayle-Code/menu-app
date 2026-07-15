@@ -59,12 +59,12 @@ function ProductBadges({
   return (
     <div
       aria-label="Características del producto"
-      className={`flex flex-wrap gap-1.5 ${className}`.trim()}
+      className={`product-badges flex flex-wrap gap-1.5 ${className}`.trim()}
     >
       {commercialBadges.map((badge) => (
         <span
           key={badge.id}
-          className="rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none"
+          className="product-badge rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none"
           style={{
             backgroundColor: badge.backgroundColor,
             borderColor: badge.borderColor,
@@ -78,7 +78,7 @@ function ProductBadges({
       {visibleTags.map((tag) => {
         const sharedProps = {
           className:
-            "rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none",
+            "product-badge product-badge--tag rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none",
           style: {
             backgroundColor: theme.colors.iconOuterBackground,
             borderColor: theme.colors.border,
@@ -107,7 +107,7 @@ function ProductBadges({
       {hiddenTagsCount > 0 && (
         <span
           aria-label={`${hiddenTagsCount} etiquetas más`}
-          className="rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none"
+          className="product-badge product-badge--more rounded-full border px-2.5 py-1 text-[10px] font-semibold leading-none"
           style={{
             backgroundColor: theme.colors.productCard,
             borderColor: theme.colors.border,
